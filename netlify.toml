@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "."
+
+[dev]
+  framework = "#custom"
+  command = "node server.js"
+  targetPort = 3000
+  port = 8888
+  autoLaunch = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
