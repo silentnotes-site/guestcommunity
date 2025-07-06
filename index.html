@@ -9,97 +9,37 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; font-family:'Outfit',sans-serif;
-      background: linear-gradient(to right,#0f0c29,#302b63,#24243e);
-      overflow:hidden; color:#fff; }
-    #ring-intro {
-      position:fixed; top:0; left:0; width:100vw; height:100vh;
-      background:#0f0c29; display:flex; align-items:center;
-      justify-content:center; flex-direction:column; z-index:9999;
-    }
-    #ring-text { font-size:6rem; font-weight:700; letter-spacing:.3em;
-      color:#25d366; text-shadow:0 0 20px #25d366cc; opacity:0; }
+    html, body { width:100%; height:100%; font-family:'Outfit',sans-serif; background: linear-gradient(to right,#0f0c29,#302b63,#24243e); overflow:hidden; color:#fff; }
+    #ring-intro { position:fixed; top:0; left:0; width:100vw; height:100vh; background:#0f0c29; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999; }
+    #ring-text { font-size:6rem; font-weight:700; letter-spacing:.3em; color:#25d366; text-shadow:0 0 20px #25d366cc; opacity:0; }
     #ring-subtext { margin-top:1rem; font-size:1.4rem; color:#aaa; opacity:0; }
-    #main-site { display:none; position:relative; z-index:2;
-      height:100vh; overflow-y:auto; padding-bottom:60px; }
-    header {
-      position:sticky; top:0; background:rgba(0,0,0,0.5);
-      backdrop-filter:blur(6px); padding:1rem 3rem;
-      display:flex; justify-content:space-between; align-items:center;
-      z-index:10;
-    }
+    #main-site { display:none; position:relative; z-index:2; height:100vh; overflow-y:auto; padding-bottom:60px; }
+    header { position:sticky; top:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); padding:1rem 3rem; display:flex; justify-content:space-between; align-items:center; z-index:10; }
     header h1 { font-size:1.8rem; user-select:none; }
     nav { display:flex; gap:1.5rem; flex-wrap:wrap; }
-    nav a {
-      color:#ccc; font-weight:600; cursor:pointer; text-decoration:none;
-      padding-bottom:4px; border-bottom:2px solid transparent;
-      transition:color .3s,border-color .3s;
-    }
-    nav a:hover, nav a.active {
-      color:#25d366; border-bottom-color:#25d366;
-    }
+    nav a { color:#ccc; font-weight:600; cursor:pointer; text-decoration:none; padding-bottom:4px; border-bottom:2px solid transparent; transition:color .3s,border-color .3s; }
+    nav a:hover, nav a.active { color:#25d366; border-bottom-color:#25d366; }
     main { max-width:900px; margin:80px auto 40px; padding:0 20px; }
     section { display:none; }
     section.active { display:block; }
     h2 { margin-bottom:1rem; user-select:none; }
-    button {
-      background:#25d366; border:none; border-radius:30px;
-      padding:1rem 2rem; font-size:1.2rem; color:#fff;
-      cursor:pointer; box-shadow:0 6px 15px #25d366aa;
-      margin-top:1.5rem; user-select:none; transition:background .3s;
-    }
+    button { background:#25d366; border:none; border-radius:30px; padding:1rem 2rem; font-size:1.2rem; color:#fff; cursor:pointer; box-shadow:0 6px 15px #25d366aa; margin-top:1.5rem; user-select:none; transition:background .3s; }
     button:hover { background:#1da851; }
-    input#news-search {
-      width:100%; padding:.5rem 1rem; font-size:1rem;
-      border-radius:10px; border:none; margin-bottom:1rem;
-    }
-    #news-container {
-      display:flex; flex-direction:column; gap:1.5rem;
-    }
-    .news-item {
-      background:rgba(37,211,102,0.1); border-radius:10px;
-      padding:1rem; display:flex; gap:1rem; color:#ddd;
-    }
-    .news-image {
-      width:150px; height:100px; border-radius:10px;
-      object-fit:cover; flex-shrink:0; background:#111;
-    }
-    .news-content {
-      flex:1; display:flex; flex-direction:column;
-    }
-    .news-title {
-      font-weight:700; font-size:1.1rem; color:#25d366;
-      margin-bottom:.3rem; user-select:none;
-    }
+    input#news-search { width:100%; padding:.5rem 1rem; font-size:1rem; border-radius:10px; border:none; margin-bottom:1rem; }
+    #news-container { display:flex; flex-direction:column; gap:1.5rem; }
+    .news-item { background:rgba(37,211,102,0.1); border-radius:10px; padding:1rem; display:flex; gap:1rem; color:#ddd; }
+    .news-image { width:150px; height:100px; border-radius:10px; object-fit:cover; flex-shrink:0; background:#111; }
+    .news-content { flex:1; display:flex; flex-direction:column; }
+    .news-title { font-weight:700; font-size:1.1rem; color:#25d366; margin-bottom:.3rem; user-select:none; }
     .news-description { font-size:.9rem; margin-bottom:.3rem; }
-    .news-date {
-      font-size:.8rem; color:#aaa; margin-bottom:.5rem;
-      user-select:none;
-    }
-    .news-excerpt {
-      font-size:.85rem; color:#ccc; flex-grow:1; user-select:text;
-    }
-    .news-link {
-      align-self:flex-start; margin-top:.5rem; font-weight:600;
-      color:#25d366; text-decoration:none; user-select:none;
-    }
+    .news-date { font-size:.8rem; color:#aaa; margin-bottom:.5rem; user-select:none; }
+    .news-excerpt { font-size:.85rem; color:#ccc; flex-grow:1; user-select:text; }
+    .news-link { align-self:flex-start; margin-top:.5rem; font-weight:600; color:#25d366; text-decoration:none; user-select:none; }
     .news-link:hover { text-decoration:underline; }
-    #events-list {
-      list-style:none; padding:0;
-    }
-    .event-item {
-      background:rgba(255,255,255,0.1); border-radius:10px;
-      padding:1rem; margin-bottom:1rem;
-    }
-    #contact-form input,#contact-form textarea {
-      width:100%; padding:.8rem 1rem; border-radius:10px;
-      border:none; font-size:1rem; resize:vertical;
-      margin-bottom:1rem;
-    }
-    footer {
-      text-align:center; padding:2rem 0; color:#aaa;
-      background:rgba(0,0,0,0.5);
-    }
+    #events-list { list-style:none; padding:0; }
+    .event-item { background:rgba(255,255,255,0.1); border-radius:10px; padding:1rem; margin-bottom:1rem; }
+    #contact-form input,#contact-form textarea { width:100%; padding:.8rem 1rem; border-radius:10px; border:none; font-size:1rem; resize:vertical; margin-bottom:1rem; }
+    footer { text-align:center; padding:2rem 0; color:#aaa; background:rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
@@ -132,6 +72,7 @@
     <section id="meteo">
       <h2>Meteo</h2>
       <p id="meteo-info">Caricamento meteo...</p>
+      <p id="timezone-info"></p>
     </section>
 
     <section id="notizie">
@@ -209,8 +150,8 @@
         return
       }
       navigator.geolocation.getCurrentPosition(async pos=>{
-        const lat=pos.coords.latitude.toFixed(2)
-        const lon=pos.coords.longitude.toFixed(2)
+        const lat = pos.coords.latitude.toFixed(2)
+        const lon = pos.coords.longitude.toFixed(2)
         const data = await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`)
         if(!data || !data.current_weather){
           document.getElementById('meteo-info').textContent="Errore caricamento meteo"
@@ -222,8 +163,10 @@
           45:"Nebbia",48:"Nebbia brina",51:"Pioggerella",
           61:"Pioggia",71:"Neve",95:"Temporale",99:"Grandine"
         }
-        document.getElementById('meteo-info').textContent=`${w.temperature}°C, ${descMap[w.weathercode] || 'Sconosciuto'}, vento ${w.windspeed} km/h`
-      },()=>{
+        document.getElementById('meteo-info').textContent =
+          `${w.temperature}°C, ${descMap[w.weathercode] || 'Sconosciuto'}, vento ${w.windspeed} km/h`
+        document.getElementById('timezone-info').textContent = `Fuso orario rilevato: ${data.timezone}`
+      }, ()=>{
         document.getElementById('meteo-info').textContent="Geolocalizzazione negata"
       })
     }
