@@ -1,218 +1,58 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Guest Community</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/socket.io/socket.io.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;background:linear-gradient(to right,#0f0c29,#302b63,#24243e);overflow:hidden;color:#fff}
-#ring-intro{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0f0c29;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999}
-#loader-ring{width:100px;height:100px;border:8px solid #444;border-top-color:#25d366;border-radius:50%;margin-bottom:2rem;animation:spin 1.5s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-#ring-text{font-size:4rem;font-weight:700;letter-spacing:.2em;color:#25d366;text-shadow:0 0 20px #25d366cc;opacity:0}
-#ring-subtext{margin-top:1rem;font-size:1.2rem;color:#aaa;opacity:0}
-#login-register{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#0f0c29;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2rem}
-#login-register form{background:#1b1b2f;padding:2rem;border-radius:20px;width:320px;display:flex;flex-direction:column;gap:1rem}
-#login-register input{padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem}
-#login-register button{background:#25d366;border:none;border-radius:30px;padding:1rem 2rem;font-size:1.2rem;color:#fff;cursor:pointer;box-shadow:0 6px 15px #25d366aa;user-select:none;transition:background .3s}
-#login-register button:hover{background:#1da851}
-#login-register .toggle-text{color:#ccc;font-size:.9rem;text-align:center;user-select:none}
-#login-register .toggle-text span{color:#25d366;cursor:pointer;font-weight:700}
-#main-site{display:none;position:relative;z-index:2;height:100vh;overflow-y:auto;padding-bottom:60px}
-header{position:sticky;top:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);padding:1rem 3rem;display:flex;justify-content:space-between;align-items:center;z-index:10}
-header h1{font-size:1.8rem;user-select:none}
-nav{display:flex;gap:1.5rem;flex-wrap:wrap}
-nav a{color:#ccc;font-weight:600;cursor:pointer;text-decoration:none;padding-bottom:4px;border-bottom:2px solid transparent;transition:color .3s,border-color .3s}
-nav a:hover,nav a.active{color:#25d366;border-bottom-color:#25d366}
-#user-menu-container{position:relative;display:flex;align-items:center;gap:0.5rem;cursor:pointer;user-select:none}
-#user-avatar{width:40px;height:40px;border-radius:50%;background:#25d366;color:#0f0c29;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;box-shadow:0 0 10px #25d366cc;transition:transform 0.3s}
-#user-arrow{transition:transform 0.3s;transform-origin:center;user-select:none;display:flex;align-items:center;justify-content:center}
-#user-menu{position:absolute;top:calc(100% + 5px);right:0;background:#1b1b2f;border-radius:10px;padding:1rem;width:220px;display:none;flex-direction:column;gap:0.8rem;box-shadow:0 0 10px #000000aa;z-index:100}
-#user-menu input,#user-menu textarea{width:100%;padding:.6rem 1rem;border-radius:10px;border:none;font-size:1rem;color:#000;resize:vertical}
-#user-menu textarea{height:60px}
-#user-menu button{background:#25d366;border:none;border-radius:30px;padding:.6rem 1rem;font-size:1rem;color:#fff;cursor:pointer;box-shadow:0 6px 15px #25d366aa;user-select:none;transition:background .3s}
-#user-menu button:hover{background:#1da851}
-main{max-width:900px;margin:80px auto 40px;padding:0 20px}
-section{display:none}
-section.active{display:block}
-h2{margin-bottom:1rem;user-select:none}
-#chat-container{background:rgba(0,0,0,0.4);padding:1rem;border-radius:10px;max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:1rem;margin-bottom:1rem}
-.chat-message{display:flex;gap:0.8rem;align-items:flex-start}
-.chat-avatar{width:40px;height:40px;border-radius:50%;background:#25d366;color:#0f0c29;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0;user-select:none}
-.chat-content{background:#1b1b2f;padding:0.5rem 1rem;border-radius:10px;max-width:70%;word-break:break-word;position:relative}
-.chat-username{font-weight:700;color:#25d366;cursor:pointer;user-select:none}
-.mention{color:#ffd700;font-weight:700;background:#444;padding:0 3px;border-radius:5px;user-select:none}
-#chat-input{width:100%;padding:0.8rem 1rem;border-radius:20px;border:none;font-size:1rem;margin-bottom:1rem}
-#send-btn{background:#25d366;border:none;border-radius:30px;padding:0.8rem 2rem;font-size:1rem;color:#fff;cursor:pointer;box-shadow:0 6px 15px #25d366aa;user-select:none;transition:background .3s}
-#send-btn:hover{background:#1da851}
-footer{text-align:center;padding:1rem 0;background:rgba(0,0,0,0.5);position:sticky;bottom:0}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guest Community</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { height: 100%; width: 100%; font-family: 'Outfit', sans-serif; background: #0f0c29; color: white; overflow: hidden; }
+    #intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+    }
+    #intro h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+    }
+    #intro p {
+      font-size: 1.5rem;
+      opacity: 0;
+    }
+    #main {
+      display: none;
+      padding: 2rem;
+    }
+  </style>
 </head>
 <body>
-<div id="ring-intro">
-  <div id="loader-ring"></div>
-  <div id="ring-text">Guest Community</div>
-  <div id="ring-subtext">Caricamento in corso...</div>
-</div>
-<div id="login-register">
-  <form id="login-form">
-    <h2>Login</h2>
-    <input type="text" name="username" placeholder="Username" required autocomplete="username" />
-    <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
-    <button type="submit">Accedi</button>
-    <p class="toggle-text">Non hai un account? <span id="show-register">Registrati</span></p>
-  </form>
-  <form id="register-form" style="display:none">
-    <h2>Registrati</h2>
-    <input type="text" name="name" placeholder="Nome visualizzato" required autocomplete="name" />
-    <input type="email" name="email" placeholder="Email" required autocomplete="email" />
-    <input type="text" name="username" placeholder="Username" required autocomplete="username" />
-    <input type="password" name="password" placeholder="Password" required autocomplete="new-password" />
-    <button type="submit">Registrati</button>
-    <p class="toggle-text">Hai già un account? <span id="show-login">Accedi</span></p>
-  </form>
-</div>
-<div id="main-site" tabindex="0" style="opacity:0">
-  <header>
-    <h1>Guest Community</h1>
-    <nav>
-      <a class="nav-link active" data-section="home">Home</a>
-      <a class="nav-link" data-section="meteo">Meteo</a>
-      <a class="nav-link" data-section="notizie">Notizie</a>
-      <a class="nav-link" data-section="ora">Ora</a>
-      <a class="nav-link" data-section="eventi">Eventi</a>
-      <a class="nav-link" data-section="chat">Chat</a>
-      <a class="nav-link" data-section="contatti">Contatti</a>
-    </nav>
-    <div id="user-menu-container" style="display:none" tabindex="0" aria-haspopup="true" aria-expanded="false">
-      <div id="user-avatar"></div>
-      <div id="user-arrow">▼</div>
-      <div id="user-menu" role="menu" aria-label="Menu utente">
-        <input type="text" id="edit-name" placeholder="Nome visualizzato" />
-        <input type="text" id="edit-username" placeholder="Username" />
-        <input type="email" id="edit-email" placeholder="Email" />
-        <textarea id="edit-description" placeholder="Descrizione"></textarea>
-        <input type="text" id="edit-profileImage" placeholder="URL foto profilo" />
-        <button id="save-profile">Salva profilo</button>
-        <button id="logout-btn" style="background:#e53e3e;margin-top:0.5rem">Logout</button>
-      </div>
-    </div>
-  </header>
-  <main>
-    <section id="home" class="active">
-      <h2>Benvenuto nella Guest Community</h2>
-      <p>Unisciti al gruppo WhatsApp per condividere idee, risorse e nuove esperienze.</p>
-      <button onclick="window.open('https://chat.whatsapp.com/I9Tw0sIS8ulDD9djqYav36','_blank')">Unisciti al gruppo</button>
-    </section>
-    <section id="meteo">
-      <h2>Meteo</h2>
-      <p id="meteo-info">Caricamento meteo...</p>
-      <p id="meteo-timezone"></p>
-    </section>
-    <section id="notizie">
-      <h2>Ultime notizie</h2>
-      <input id="news-search" placeholder="Cerca notizie..." autocomplete="off" />
-      <p id="news-info">Caricamento notizie...</p>
-      <div id="news-container"></div>
-    </section>
-    <section id="ora">
-      <h2>Ora attuale</h2>
-      <p id="time-info">Caricamento ora...</p>
-      <p id="ora-timezone"></p>
-    </section>
-    <section id="eventi">
-      <h2>Eventi prossimi</h2>
-      <ul id="events-list"></ul>
-    </section>
-    <section id="chat">
-      <h2>Chat</h2>
-      <div id="chat-container"></div>
-      <input type="text" id="chat-input" placeholder="Scrivi un messaggio... (@AI per interagire con il bot)" autocomplete="off" />
-      <button id="send-btn">Invia</button>
-    </section>
-    <section id="contatti">
-      <h2>Contattaci</h2>
-      <form id="contact-form">
-        <input type="hidden" name="access_key" value="9a9e0334-0522-4e37-b34d-7f64d72c463f" />
-        <input type="text" name="name" placeholder="Nome completo" required />
-        <input type="email" name="email" placeholder="Email" required />
-        <textarea name="message" placeholder="Messaggio" required></textarea>
-        <button type="submit">Invia messaggio</button>
-      </form>
-    </section>
-  </main>
-  <footer>© 2025 Guest Community • Powered by Tutuu666k Team</footer>
-</div>
-<script>
-(()=> {
-  const socket = io()
-  gsap.from('#loader-ring',{scale:0,duration:1})
-  gsap.from('#ring-text',{opacity:0,y:20,duration:1,delay:0.5})
-  gsap.from('#ring-subtext',{opacity:0,y:20,duration:1,delay:1})
-  setTimeout(()=>{
-    gsap.to('#ring-intro',{opacity:0,duration:1,onComplete:()=>{
-      document.getElementById('ring-intro').remove()
-      showLogin()
-    }})
-  },3500)
-  const loginRegister=document.getElementById('login-register')
-  const loginForm=document.getElementById('login-form')
-  const registerForm=document.getElementById('register-form')
-  const showRegister=document.getElementById('show-register')
-  const showLogin=document.getElementById('show-login')
-  const mainSite=document.getElementById('main-site')
-  const navLinks=document.querySelectorAll('.nav-link')
-  const sections=document.querySelectorAll('main section')
-  const userMenuContainer=document.getElementById('user-menu-container')
-  const userAvatar=document.getElementById('user-avatar')
-  const userArrow=document.getElementById('user-arrow')
-  const userMenu=document.getElementById('user-menu')
-  const editName=document.getElementById('edit-name')
-  const editUsername=document.getElementById('edit-username')
-  const editEmail=document.getElementById('edit-email')
-  const editDescription=document.getElementById('edit-description')
-  const editProfileImage=document.getElementById('edit-profileImage')
-  const saveProfileBtn=document.getElementById('save-profile')
-  const logoutBtn=document.getElementById('logout-btn')
-  let token=localStorage.getItem('token')
-  let currentUser=null
-  let userMenuOpen=false
-  function showLogin(){loginRegister.style.display='flex';mainSite.style.display='none'}
-  function showMainSite(){loginRegister.style.display='none';mainSite.style.display='block';gsap.to(mainSite,{opacity:1,duration:1});loadUserData();fetchMeteo();fetchNotizie();updateTime();setInterval(updateTime,1000);fetchEventi();setupChat()}
-  showRegister.onclick=()=>{loginForm.style.display='none';registerForm.style.display='flex'}
-  showLogin.onclick=()=>{registerForm.style.display='none';loginForm.style.display='flex'}
-  loginForm.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(loginForm),d={username:f.get('username'),password:f.get('password')};try{const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}),j=await r.json();if(r.ok){token=j.token;localStorage.setItem('token',token);currentUser=j.username;showMainSite()}else Swal.fire({icon:'error',title:'Errore',text:j.error||'Login fallito'})}catch{Swal.fire({icon:'error',title:'Errore',text:'Errore di rete'})}})
-  registerForm.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(registerForm),d={name:f.get('name'),email:f.get('email'),username:f.get('username'),password:f.get('password')};try{const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}),j=await r.json();if(r.ok){token=j.token;localStorage.setItem('token',token);currentUser=j.username;showMainSite()}else Swal.fire({icon:'error',title:'Errore',text:j.error||'Registrazione fallita'})}catch{Swal.fire({icon:'error',title:'Errore',text:'Errore di rete'})}})
-  function loadUserData(){if(!token)return showLogin();fetchProfile(currentUser).then(d=>{if(!d)return logout();currentUser=d.username;updateUserAvatar(d.username);editName.value=d.name||'';editUsername.value=d.username||'';editEmail.value=d.email||'';editDescription.value=d.description||'';editProfileImage.value=d.profileImage||'';userMenuContainer.style.display='flex'}).catch(()=>logout())}
-  async function fetchProfile(u){if(!u)return null;const r=await fetch('/api/profile/'+u);if(!r.ok)return null;return await r.json()}
-  function updateUserAvatar(u){const i=u?u.charAt(0).toUpperCase():'?';userAvatar.textContent=i}
-  userMenuContainer.addEventListener('click',()=>{userMenuOpen=!userMenuOpen;userMenu.style.display=userMenuOpen?'flex':'none';userArrow.style.transform=userMenuOpen?'rotate(180deg)':'rotate(0deg)';userMenuContainer.setAttribute('aria-expanded',userMenuOpen)})
-  saveProfileBtn.addEventListener('click',async()=>{const nu=editUsername.value.trim(),nn=editName.value.trim(),ne=editEmail.value.trim(),nd=editDescription.value.trim(),npi=editProfileImage.value.trim();if(!nu||!nn||!ne){Swal.fire({icon:'error',title:'Errore',text:'Username, nome e email sono obbligatori'});return}try{const r=await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,username:nu,name:nn,email:ne,description:nd,profileImage:npi})}),j=await r.json();if(j.success){Swal.fire({icon:'success',title:'Profilo aggiornato'});currentUser=nu;updateUserAvatar(nu)}else Swal.fire({icon:'error',title:'Errore',text:j.error||'Aggiornamento fallito'})}catch{Swal.fire({icon:'error',title:'Errore',text:'Errore di rete'})}})
-  logoutBtn.addEventListener('click',logout)
-  function logout(){localStorage.removeItem('token');token=null;currentUser=null;userMenuContainer.style.display='none';userMenu.style.display='none';loginForm.reset();registerForm.reset();showLogin()}
-  navLinks.forEach(a=>{a.addEventListener('click',()=>{navLinks.forEach(x=>x.classList.remove('active'));a.classList.add('active');sections.forEach(s=>s.id===a.dataset.section?s.style.display='block':s.style.display='none');if(a.dataset.section==='chat')scrollChatBottom()})})
-  const fetchApi=async u=>{try{let r=await fetch(u);if(!r.ok)throw '';return await r.json()}catch{return null}}
-  async function fetchMeteo(){if(!navigator.geolocation){document.getElementById('meteo-info').textContent="Geolocalizzazione non supportata";return}navigator.geolocation.getCurrentPosition(async pos=>{let lat=pos.coords.latitude.toFixed(2),lon=pos.coords.longitude.toFixed(2),d=await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`);if(!d?.current_weather){document.getElementById('meteo-info').textContent="Errore meteo";return}let w=d.current_weather,m={0:"Sereno",1:"Parz.nuvoloso",2:"Nuvoloso",3:"Coperto",45:"Nebbia",48:"Nebbia brina",51:"Pioggerella leggera",53:"Pioggerella moderata",55:"Pioggerella intensa",61:"Pioggia leggera",63:"Pioggia moderata",65:"Pioggia intensa",71:"Neve leggera",73:"Neve moderata",75:"Neve intensa",80:"Rovesci leggeri",81:"Rovesci moderati",82:"Rovesci intensi",95:"Temporale",96:"Temp. con grandine leggera",99:"Temp. con grandine intensa"};document.getElementById('meteo-info').textContent=`${w.temperature}°C, ${m[w.weathercode]||'Sconosciuto'}, vento ${w.windspeed} km/h`;document.getElementById('meteo-timezone').textContent=`Fuso rilevato: ${d.timezone}`},()=>document.getElementById('meteo-info').textContent="Permesso negato")}
-  let td
-  const fetchNotizie=async(q='tecnologia')=>{let info=document.getElementById('news-info'),cont=document.getElementById('news-container');info.textContent="Caricamento notizie...";cont.innerHTML='';let d=await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`);if(!d?.articles?.length){info.textContent="Nessuna notizia";return}info.textContent='';d.articles.filter(a=>a.image&&a.description).forEach(a=>{let el=document.createElement('div');el.className='news-item';el.innerHTML=`<img class="news-image" src="${a.image}" alt="" /><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link" href="${a.url}" target="_blank">Leggi di più</a></div>`;cont.appendChild(el)})}
-  document.getElementById('news-search').addEventListener('input',e=>{clearTimeout(td);let q=e.target.value.trim()||'tecnologia';td=setTimeout(()=>fetchNotizie(q),500)})
-  function updateTime(){document.getElementById('time-info').textContent=new Date().toLocaleTimeString();document.getElementById('ora-timezone').textContent=`Fuso client: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`}
-  const fetchEventi=async()=>{let ul=document.getElementById('events-list');ul.innerHTML='';let d=await fetchApi('/api/eventi');if(!d?.events?.length){ul.innerHTML='<li class="event-item">Nessun evento</li>';return}d.events.slice(0,5).forEach(ev=>{let li=document.createElement('li');li.className='event-item';li.innerHTML=`<strong>${ev.name.text}</strong><br>${new Date(ev.start.local).toLocaleDateString('it-IT',{dateStyle:'medium',timeStyle:'short'})}`;ul.appendChild(li)})}
-  document.getElementById('contact-form').addEventListener('submit',async e=>{e.preventDefault();let f=e.target,fd=new FormData(f);try{let r=await fetch('https://api.web3forms.com/submit',{method:'POST',body:fd}),j=await r.json();if(j.success){Swal.fire({icon:'success',title:'Messaggio inviato!',text:j.message});f.reset()}else Swal.fire({icon:'error',title:'Errore',text:j.message||'Invio fallito'})}catch{Swal.fire({icon:'error',title:'Errore di rete',text:'Riprova'})}})
-  function createChatMessage(msg){const div=document.createElement('div');div.className='chat-message';const avatar=document.createElement('div');avatar.className='chat-avatar';avatar.textContent=msg.username.charAt(0).toUpperCase();const content=document.createElement('div');content.className='chat-content';const usernameSpan=document.createElement('span');usernameSpan.className='chat-username';usernameSpan.textContent=msg.username;usernameSpan.onclick=()=>{window.open(`/profile.html?user=${encodeURIComponent(msg.username)}`,'_blank')};let text=msg.text.replace(/@(\w+)/g,'<span class="mention">@$1</span>');content.append(usernameSpan);content.insertAdjacentHTML('beforeend',`<div>${text}</div>`);div.append(avatar,content);return div}
-  const chatContainer=document.getElementById('chat-container')
-  const chatInput=document.getElementById('chat-input')
-  const sendBtn=document.getElementById('send-btn')
-  function scrollChatBottom(){chatContainer.scrollTop=chatContainer.scrollHeight}
-  function setupChat(){socket.on('message',msg=>{chatContainer.appendChild(createChatMessage(msg));scrollChatBottom()});sendBtn.onclick=sendMessage;chatInput.onkeypress=e=>{if(e.key==='Enter')sendMessage()}}
-  function sendMessage(){if(!token){Swal.fire({icon:'error',title:'Non sei loggato'});return}const text=chatInput.value.trim();if(!text)return;socket.emit('message',{username:currentUser,text,ip:'0.0.0.0'});chatInput.value=''}
-  if(token){fetch('/api/profile/'+currentUser).then(r=>r.json()).then(d=>{if(!d||!d.username)logout();else showMainSite()}).catch(()=>logout())}
-})()
-</script>
+  <div id="intro">
+    <h1>Benvenuto su Guest Community</h1>
+    <p>Preparati a entrare</p>
+  </div>
+  <div id="main">
+    <h2>Homepage Guest Community</h2>
+    <p>Contenuti visibili dopo l’intro</p>
+  </div>
+  <script>
+    const tl = gsap.timeline()
+    tl.to("#intro h1", { opacity: 1, duration: 1, y: -20 })
+      .to("#intro p", { opacity: 1, duration: 1, y: 20 }, "<")
+      .to("#intro", { opacity: 0, duration: 1, delay: 1 })
+      .add(() => {
+        document.getElementById("intro").style.display = "none"
+        document.getElementById("main").style.display = "block"
+      })
+  </script>
 </body>
 </html>
