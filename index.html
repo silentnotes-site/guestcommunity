@@ -4,42 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Guest Community</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; font-family:'Outfit',sans-serif; background: linear-gradient(to right,#0f0c29,#302b63,#24243e); overflow:hidden; color:#fff; }
-    #ring-intro { position:fixed; top:0; left:0; width:100vw; height:100vh; background:#0f0c29; display:flex; align-items:center; justify-content:center; flex-direction:column; z-index:9999; }
-    #ring-text { font-size:6rem; font-weight:700; letter-spacing:.3em; color:#25d366; text-shadow:0 0 20px #25d366cc; opacity:0; }
-    #ring-subtext { margin-top:1rem; font-size:1.4rem; color:#aaa; opacity:0; }
-    #main-site { display:none; position:relative; z-index:2; height:100vh; overflow-y:auto; padding-bottom:60px; }
-    header { position:sticky; top:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(6px); padding:1rem 3rem; display:flex; justify-content:space-between; align-items:center; z-index:10; }
-    header h1 { font-size:1.8rem; user-select:none; }
-    nav { display:flex; gap:1.5rem; flex-wrap:wrap; }
-    nav a { color:#ccc; font-weight:600; cursor:pointer; text-decoration:none; padding-bottom:4px; border-bottom:2px solid transparent; transition:color .3s,border-color .3s; }
-    nav a:hover, nav a.active { color:#25d366; border-bottom-color:#25d366; }
-    main { max-width:900px; margin:80px auto 40px; padding:0 20px; }
-    section { display:none; }
-    section.active { display:block; }
-    h2 { margin-bottom:1rem; user-select:none; }
-    button { background:#25d366; border:none; border-radius:30px; padding:1rem 2rem; font-size:1.2rem; color:#fff; cursor:pointer; box-shadow:0 6px 15px #25d366aa; margin-top:1.5rem; user-select:none; transition:background .3s; }
-    button:hover { background:#1da851; }
-    input#news-search { width:100%; padding:.5rem 1rem; font-size:1rem; border-radius:10px; border:none; margin-bottom:1rem; }
-    #news-container { display:flex; flex-direction:column; gap:1.5rem; }
-    .news-item { background:rgba(37,211,102,0.1); border-radius:10px; padding:1rem; display:flex; gap:1rem; color:#ddd; }
-    .news-image { width:150px; height:100px; border-radius:10px; object-fit:cover; flex-shrink:0; background:#111; }
-    .news-content { flex:1; display:flex; flex-direction:column; }
-    .news-title { font-weight:700; font-size:1.1rem; color:#25d366; margin-bottom:.3rem; user-select:none; }
-    .news-description { font-size:.9rem; margin-bottom:.3rem; }
-    .news-date { font-size:.8rem; color:#aaa; margin-bottom:.5rem; user-select:none; }
-    .news-excerpt { font-size:.85rem; color:#ccc; flex-grow:1; user-select:text; }
-    .news-link { align-self:flex-start; margin-top:.5rem; font-weight:600; color:#25d366; text-decoration:none; user-select:none; }
-    .news-link:hover { text-decoration:underline; }
-    #events-list { list-style:none; padding:0; }
-    .event-item { background:rgba(255,255,255,0.1); border-radius:10px; padding:1rem; margin-bottom:1rem; }
-    #contact-form input,#contact-form textarea { width:100%; padding:.8rem 1rem; border-radius:10px; border:none; font-size:1rem; resize:vertical; margin-bottom:1rem; }
-    footer { text-align:center; padding:2rem 0; color:#aaa; background:rgba(0,0,0,0.5); }
+    html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;
+      background:linear-gradient(to right,#0f0c29,#302b63,#24243e);
+      overflow:hidden;color:#fff;}
+    #ring-intro{position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:#0f0c29;display:flex;align-items:center;
+      justify-content:center;flex-direction:column;z-index:9999;}
+    #ring-text{font-size:6rem;font-weight:700;letter-spacing:.3em;
+      color:#25d366;text-shadow:0 0 20px #25d366cc;opacity:0;}
+    #ring-subtext{margin-top:1rem;font-size:1.4rem;color:#aaa;opacity:0;}
+    #main-site{display:none;position:relative;z-index:2;
+      height:100vh;overflow-y:auto;padding-bottom:60px;}
+    header{position:sticky;top:0;background:rgba(0,0,0,0.5);
+      backdrop-filter:blur(6px);padding:1rem 3rem;
+      display:flex;justify-content:space-between;align-items:center;z-index:10;}
+    header h1{font-size:1.8rem;user-select:none;}
+    nav{display:flex;gap:1.5rem;flex-wrap:wrap;}
+    nav a{color:#ccc;font-weight:600;cursor:pointer;text-decoration:none;
+      padding-bottom:4px;border-bottom:2px solid transparent;
+      transition:color .3s,border-color .3s;}
+    nav a:hover,nav a.active{color:#25d366;border-bottom-color:#25d366;}
+    main{max-width:900px;margin:80px auto 40px;padding:0 20px;}
+    section{display:none;}section.active{display:block;}
+    h2{margin-bottom:1rem;user-select:none;}
+    button{background:#25d366;border:none;border-radius:30px;
+      padding:1rem 2rem;font-size:1.2rem;color:#fff;cursor:pointer;
+      box-shadow:0 6px 15px #25d366aa;margin-top:1.5rem;
+      user-select:none;transition:background .3s;}
+    button:hover{background:#1da851;}
+    input#news-search{width:100%;padding:.5rem 1rem;font-size:1rem;
+      border-radius:10px;border:none;margin-bottom:1rem;}
+    #news-container{display:flex;flex-direction:column;gap:1.5rem;}
+    .news-item{background:rgba(37,211,102,0.1);border-radius:10px;
+      padding:1rem;display:flex;gap:1rem;color:#ddd;}
+    .news-image{width:150px;height:100px;border-radius:10px;
+      object-fit:cover;flex-shrink:0;background:#111;}
+    .news-content{flex:1;display:flex;flex-direction:column;}
+    .news-title{font-weight:700;font-size:1.1rem;color:#25d366;
+      margin-bottom:.3rem;user-select:none;}
+    .news-description{font-size:.9rem;margin-bottom:.3rem;}
+    .news-date{font-size:.8rem;color:#aaa;margin-bottom:.5rem;user-select:none;}
+    .news-excerpt{font-size:.85rem;color:#ccc;flex-grow:1;user-select:text;}
+    .news-link{align-self:flex-start;margin-top:.5rem;font-weight:600;
+      color:#25d366;text-decoration:none;user-select:none;}
+    .news-link:hover{text-decoration:underline;}
+    #events-list{list-style:none;padding:0;}
+    .event-item{background:rgba(255,255,255,0.1);border-radius:10px;
+      padding:1rem;margin-bottom:1rem;}
+    #contact-form input,#contact-form textarea{width:100%;
+      padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem;
+      resize:vertical;margin-bottom:1rem;}
+    footer{text-align:center;padding:2rem 0;color:#aaa;
+      background:rgba(0,0,0,0.5);}
   </style>
 </head>
 <body>
@@ -122,150 +143,85 @@
   },3500)
 
   function startApp(){
+    const show = el => el.style.display='block'
     const mainSite = document.getElementById('main-site')
-    mainSite.style.display='block'
+    show(mainSite)
     gsap.to(mainSite,{opacity:1,duration:1.5})
-    const navLinks=document.querySelectorAll('.nav-link')
-    const sections=document.querySelectorAll('main section')
+    const navLinks = document.querySelectorAll('.nav-link')
+    const sections = document.querySelectorAll('main section')
     navLinks.forEach(l=>l.addEventListener('click',()=>{
       navLinks.forEach(x=>x.classList.remove('active'))
       l.classList.add('active')
-      const tgt = l.getAttribute('data-section')
-      sections.forEach(s=>s.classList.toggle('active',s.id===tgt))
+      const tgt = l.dataset.section
+      sections.forEach(s=>s.id===tgt ? show(s) : s.style.display='none')
     }))
 
-    async function fetchApi(url){
-      try {
-        const res = await fetch(url)
-        if(!res.ok) throw new Error('Errore rete')
-        return await res.json()
-      } catch {
-        return null
-      }
+    const fetchApi = async url => {
+      try { const r=await fetch(url); if(!r.ok) throw ''; return await r.json() } catch { return null }
     }
 
-    async function fetchMeteo(){
-      if(!navigator.geolocation){
-        document.getElementById('meteo-info').textContent="Geolocalizzazione non supportata"
-        return
-      }
+    const fetchMeteo = () => {
+      if(!navigator.geolocation){ document.getElementById('meteo-info').textContent="Geolocalizzazione non supportata"; return }
       navigator.geolocation.getCurrentPosition(async pos=>{
-        const lat = pos.coords.latitude.toFixed(2)
-        const lon = pos.coords.longitude.toFixed(2)
-        const data = await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`)
-        if(!data || !data.current_weather){
-          document.getElementById('meteo-info').textContent="Errore caricamento meteo"
-          return
-        }
-        const w = data.current_weather
-        const descMap = {
-          0:"Sereno",1:"Parz. nuvoloso",2:"Nuvoloso",3:"Coperto",
-          45:"Nebbia",48:"Nebbia brina",51:"Pioggerella",
-          61:"Pioggia",71:"Neve",95:"Temporale",99:"Grandine"
-        }
-        document.getElementById('meteo-info').textContent =
-          `${w.temperature}°C, ${descMap[w.weathercode] || 'Sconosciuto'}, vento ${w.windspeed} km/h`
-        document.getElementById('timezone-info').textContent = `Fuso orario rilevato: ${data.timezone}`
-      }, ()=>{
-        document.getElementById('meteo-info').textContent="Geolocalizzazione negata"
-      })
+        const lat=pos.coords.latitude.toFixed(2), lon=pos.coords.longitude.toFixed(2)
+        const data=await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`)
+        if(!data?.current_weather){ document.getElementById('meteo-info').textContent="Errore caricamento meteo"; return }
+        const w=data.current_weather, dm={0:"Sereno",1:"Parz.nuvoloso",2:"Nuvoloso",3:"Coperto",45:"Nebbia",48:"Nebbia brina",51:"Pioggerella",61:"Pioggia",71:"Neve",95:"Temporale",99:"Grandine"}
+        document.getElementById('meteo-info').textContent=`${w.temperature}°C, ${dm[w.weathercode]||'Sconosciuto'}, vento ${w.windspeed} km/h`
+        document.getElementById('timezone-info').textContent=`Fuso orario rilevato: ${data.timezone}`
+      },()=> document.getElementById('meteo-info').textContent="Geolocalizzazione negata")
     }
 
     let debounce
-    async function fetchNotizie(q='tecnologia'){
-      const info=document.getElementById('news-info')
-      const cont=document.getElementById('news-container')
-      info.textContent="Caricamento notizie..."
-      cont.innerHTML=''
-      const data = await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`)
-      if(!data || !data.articles || !data.articles.length){
-        info.textContent="Nessuna notizia trovata"
-        return
-      }
-      const filtered = data.articles.filter(a=>a.image && a.description)
-      if(!filtered.length){
-        info.textContent = "Nessuna notizia rilevante trovata"
-        return
-      }
+    const fetchNotizie = async(q='tecnologia')=>{
+      const info=document.getElementById('news-info'), cont=document.getElementById('news-container')
+      info.textContent="Caricamento notizie..."; cont.innerHTML=''
+      const data=await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`)
+      if(!data?.articles?.length){ info.textContent="Nessuna notizia trovata"; return }
+      const filtered=data.articles.filter(a=>a.image&&a.description)
+      if(!filtered.length){ info.textContent="Nessuna notizia rilevante trovata"; return }
       info.textContent=''
       filtered.forEach(a=>{
-        const item = document.createElement('div')
-        item.className = 'news-item'
-        item.innerHTML=`
-          <img class="news-image" src="${a.image}" alt=""/>
-          <div class="news-content">
-            <div class="news-title">${a.title}</div>
-            <div class="news-description">${a.description}</div>
-            <div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div>
-            <div class="news-excerpt">${a.content ? a.content.split('[')[0] : ''}</div>
-            <a class="news-link" href="${a.url}" target="_blank" rel="noopener noreferrer">Leggi di più</a>
-          </div>
-        `
-        cont.appendChild(item)
+        const d=document.createElement('div'); d.className='news-item'
+        d.innerHTML=`<img class="news-image" src="${a.image}" alt=""/><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link" href="${a.url}" target="_blank">Leggi di più</a></div>`
+        cont.appendChild(d)
       })
     }
-    document.getElementById('news-search').addEventListener('input', e=>{
-      clearTimeout(debounce)
-      const q = e.target.value.trim() || 'tecnologia'
-      debounce = setTimeout(()=>fetchNotizie(q),500)
+    document.getElementById('news-search').addEventListener('input',e=>{
+      clearTimeout(debounce); const q=e.target.value.trim()||'tecnologia'
+      debounce=setTimeout(()=>fetchNotizie(q),500)
     })
 
-    function updateTime(){
-      document.getElementById('time-info').textContent = new Date().toLocaleTimeString()
-      document.getElementById('timezone-info').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone
+    const updateTime=()=>{
+      document.getElementById('time-info').textContent=new Date().toLocaleTimeString()
+      document.getElementById('timezone-info').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone
     }
 
-    async function fetchEventi(){
-      const ul=document.getElementById('events-list')
-      ul.innerHTML=''
-      const data = await fetchApi('/api/eventi')
-      if(!data || !data.events || !data.events.length){
-        ul.innerHTML='<li class="event-item">Nessun evento trovato</li>'
-        return
-      }
+    const fetchEventi=async()=>{
+      const ul=document.getElementById('events-list'); ul.innerHTML=''
+      const data=await fetchApi('/api/eventi')
+      if(!data?.events?.length){ ul.innerHTML='<li class="event-item">Nessun evento trovato</li>'; return }
       data.events.slice(0,5).forEach(ev=>{
-        const li=document.createElement('li')
-        li.className='event-item'
-        li.innerHTML=`
-          <strong>${ev.name.text}</strong><br>
-          ${new Date(ev.start.local).toLocaleDateString('it-IT',{dateStyle:'medium',timeStyle:'short'})}<br>
-          ${ev.venue_id ? 'Luogo ID: ' + ev.venue_id : ''}
-        `
+        const li=document.createElement('li'); li.className='event-item'
+        li.innerHTML=`<strong>${ev.name.text}</strong><br>${new Date(ev.start.local).toLocaleDateString('it-IT',{dateStyle:'medium',timeStyle:'short'})}`
         ul.appendChild(li)
       })
     }
 
-    document.getElementById('contact-form').addEventListener('submit', async e=>{
-      e.preventDefault()
-      const form = e.target
-      const data = {
-        name: form.name.value,
-        email: form.email.value,
-        message: form.message.value
-      }
-      try {
-        const res = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(data)
-        })
-        const json = await res.json()
-        if(json.success){
-          Swal.fire('Messaggio inviato', 'Grazie per averci contattato.', 'success')
-          form.reset()
-        } else {
-          Swal.fire('Errore', 'Invio del messaggio fallito.', 'error')
-        }
-      } catch {
-        Swal.fire('Errore', 'Errore di rete.', 'error')
+    document.getElementById('contact-form').addEventListener('submit',async e=>{
+      e.preventDefault(); const f=e.target
+      const payload={name:f.name.value,email:f.email.value,message:f.message.value}
+      try{
+        const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+        const j=await res.json()
+        if(j.success) Swal.fire('Messaggio inviato',j.message,'success'),f.reset()
+        else Swal.fire('Errore',j.message,'error')
+      }catch(err){
+        Swal.fire('Errore','Errore di rete','error')
       }
     })
 
-    fetchMeteo()
-    fetchNotizie()
-    updateTime()
-    setInterval(updateTime,1000)
-    fetchEventi()
+    fetchMeteo(); fetchNotizie(); updateTime(); setInterval(updateTime,1000); fetchEventi()
   }
 })()
 </script>
