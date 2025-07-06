@@ -96,7 +96,6 @@ app.all('/api/*', async (req, res) => {
       return res.json(d)
     }
 
-    // --- LOGIN
     if (pathname === '/login' && method === 'POST') {
       const { username, password } = req.body
       if (!username || !password) return res.status(400).json({ error: 'Username e password richiesti' })
@@ -109,7 +108,6 @@ app.all('/api/*', async (req, res) => {
       return res.json({ success: true, token, username: user.username })
     }
 
-    // --- REGISTER
     if (pathname === '/register' && method === 'POST') {
       const { email, name, username, password } = req.body
       if (!email || !name || !username || !password) return res.status(400).json({ error: 'Tutti i campi sono obbligatori' })
@@ -124,7 +122,6 @@ app.all('/api/*', async (req, res) => {
       return res.json({ success: true, token, username })
     }
 
-    // --- GET PROFILE
     if (pathname.startsWith('/profile/') && method === 'GET') {
       const requestedUsername = pathname.split('/')[2]
       const users = readJsonFileSync(usersFile)
@@ -134,18 +131,14 @@ app.all('/api/*', async (req, res) => {
       return res.json(profile)
     }
 
-    // --- UPDATE PROFILE
     if (pathname === '/update-profile' && method === 'POST') {
       const { token, username, name, email, description, profileImage } = req.body
       if (!token) return res.status(401).json({ error: 'Token mancante' })
       const users = readJsonFileSync(usersFile)
       const userIndex = users.findIndex(u => u.token === token)
       if (userIndex === -1) return res.status(401).json({ error: 'Token non valido' })
-
-      // Controlla che username/email non siano già usati da altri (escluso te)
       if (users.some((u, i) => i !== userIndex && u.username === username)) return res.status(409).json({ error: 'Username già in uso' })
       if (users.some((u, i) => i !== userIndex && u.email === email)) return res.status(409).json({ error: 'Email già in uso' })
-
       users[userIndex].username = username
       users[userIndex].name = name
       users[userIndex].email = email
@@ -161,8 +154,6 @@ app.all('/api/*', async (req, res) => {
   }
 })
 
-// Chat Socket.IO
-
 let connectedUsers = {}
 
 io.on('connection', socket => {
@@ -177,7 +168,6 @@ io.on('connection', socket => {
     connectedUsers[socket.id] = user.username
     socket.emit('connected', { username: user.username })
 
-    // Invia chat storica
     const messages = readJsonFileSync(messagesFile)
     socket.emit('chatHistory', messages)
 
@@ -192,7 +182,6 @@ io.on('connection', socket => {
     messages.push(newMsg)
     writeJsonFileSync(messagesFile, messages)
 
-    // Menzioni: se testo contiene @username, manda notifica a quel user se connesso
     const mentions = [...newMsg.text.matchAll(/@(\w+)/g)].map(m => m[1])
     mentions.forEach(u => {
       const socketId = Object.keys(connectedUsers).find(id => connectedUsers[id] === u)
@@ -201,7 +190,6 @@ io.on('connection', socket => {
 
     io.emit('message', newMsg)
 
-    // AI risponde solo se menzionato (usa API monkedev)
     if (mentions.includes('GuestCommunityAI')) {
       const prompt = newMsg.text.replace(/@GuestCommunityAI/g, '').trim()
       if (prompt.length > 0) {
