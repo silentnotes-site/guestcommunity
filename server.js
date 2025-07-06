@@ -5,9 +5,9 @@ const PORT = process.env.PORT || 3000
 
 app.use(express.json())
 
-const GNEWS_API_KEY = 'LA_TUA_GNEWS_API_KEY'
-const EVENTBRITE_API_KEY = 'LA_TUA_EVENTBRITE_API_KEY'
-const WEB3FORMS_ACCESS_KEY = 'LA_TUA_WEB3FORMS_ACCESS_KEY'
+const GNEWS_API_KEY = 'd5952ce4e39cd92ee61ea088973969a4'
+const EVENTBRITE_API_KEY = 'SEGG3AN4HDFPIIB6WRQG'
+const WEB3FORMS_ACCESS_KEY = '9a9e0334-0522-4e37-b34d-7f64d72c463f'
 
 const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast'
 const GNEWS_API_URL = 'https://gnews.io/api/v4/search'
