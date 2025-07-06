@@ -46,18 +46,29 @@ exports.handler = async (event) => {
     }
 
     if (path === '/api/contact' && method === 'POST') {
-      const body = JSON.parse(event.body)
-      const formData = {
-        access_key: WEB3FORMS_ACCESS_KEY,
-        ...body
+      try {
+        const body = JSON.parse(event.body)
+        if (!body.name || !body.email || !body.message) {
+          return response(400, { success: false, message: 'Campi name, email e message sono obbligatori' })
+        }
+        const formData = {
+          access_key: WEB3FORMS_ACCESS_KEY,
+          ...body
+        }
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        })
+        const data = await res.json()
+        if (data.success) {
+          return response(200, { success: true, message: 'Messaggio inviato con successo' })
+        } else {
+          return response(500, { success: false, message: data.message || 'Invio fallito' })
+        }
+      } catch (err) {
+        return response(500, { success: false, message: 'Errore interno nel server', details: err.message })
       }
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
-      const data = await res.json()
-      return response(200, data)
     }
 
     return response(404, { error: 'API non trovata' })
