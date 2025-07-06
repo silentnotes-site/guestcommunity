@@ -1,366 +1,332 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Guest Community</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@3.1.1/tsparticles.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
-    color: #fff;
-    overflow-x: hidden;
-  }
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 3rem;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    position: fixed;
-    top: 0; left: 0; width: 100%;
-  }
-  header h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-    cursor: pointer;
-  }
-  nav {
-    display: flex;
-    gap: 1.5rem;
-  }
-  nav a {
-    color: #ccc;
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    position: relative;
-  }
-  nav a::after {
-    content: "";
-    position: absolute;
-    bottom: -5px; left: 0;
-    width: 0; height: 2px;
-    background: #25d366;
-    transition: width 0.3s ease;
-  }
-  nav a:hover::after,
-  nav a.active::after {
-    width: 100%;
-  }
-  nav a:hover, nav a.active {
-    color: #fff;
-  }
-  main {
-    padding-top: 100px;
-    min-height: 80vh;
-  }
-  section {
-    display: none;
-    padding: 2rem 3rem;
-    text-align: center;
-  }
-  section.active {
-    display: block;
-  }
-  h2 {
-    margin-bottom: 1rem;
-  }
-  button.join-btn {
-    background: #25d366;
-    color: #fff;
-    padding: 1rem 2rem;
-    border: none;
-    font-size: 1.2rem;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: 0 6px 15px #25d366aa;
-    margin-top: 1.5rem;
-  }
-  button.join-btn:hover {
-    background: #1ebc59;
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px #1ebc59dd;
-  }
-  #particles-js {
-    position: fixed;
-    top: 0; left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-  }
-  footer {
-    text-align: center;
-    padding: 2rem;
-    background: #101020;
-    font-size: 0.9rem;
-    color: #aaa;
-  }
-  .loading {
-    font-style: italic;
-    opacity: 0.8;
-  }
-  .error {
-    color: #ff6666;
-    font-weight: 700;
-  }
-  ul.news-list {
-    list-style: none;
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: left;
-    padding: 0;
-  }
-  ul.news-list li {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-  }
-  ul.news-list li a {
-    color: #25d366;
-    text-decoration: none;
-  }
-  ul.news-list li a:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guest Community</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; font-family:'Outfit',sans-serif;
+      background: linear-gradient(to right,#0f0c29,#302b63,#24243e);
+      overflow:hidden; color:#fff; }
+    #ring-intro {
+      position:fixed; top:0; left:0; width:100vw; height:100vh;
+      background:#0f0c29; display:flex; align-items:center;
+      justify-content:center; flex-direction:column; z-index:9999;
+    }
+    #ring-text { font-size:6rem; font-weight:700; letter-spacing:.3em;
+      color:#25d366; text-shadow:0 0 20px #25d366cc; opacity:0; }
+    #ring-subtext { margin-top:1rem; font-size:1.4rem; color:#aaa; opacity:0; }
+    #main-site { display:none; position:relative; z-index:2;
+      height:100vh; overflow-y:auto; padding-bottom:60px; }
+    header {
+      position:sticky; top:0; background:rgba(0,0,0,0.5);
+      backdrop-filter:blur(6px); padding:1rem 3rem;
+      display:flex; justify-content:space-between; align-items:center;
+      z-index:10;
+    }
+    header h1 { font-size:1.8rem; user-select:none; }
+    nav { display:flex; gap:1.5rem; flex-wrap:wrap; }
+    nav a {
+      color:#ccc; font-weight:600; cursor:pointer; text-decoration:none;
+      padding-bottom:4px; border-bottom:2px solid transparent;
+      transition:color .3s,border-color .3s;
+    }
+    nav a:hover, nav a.active {
+      color:#25d366; border-bottom-color:#25d366;
+    }
+    main { max-width:900px; margin:80px auto 40px; padding:0 20px; }
+    section { display:none; }
+    section.active { display:block; }
+    h2 { margin-bottom:1rem; user-select:none; }
+    button {
+      background:#25d366; border:none; border-radius:30px;
+      padding:1rem 2rem; font-size:1.2rem; color:#fff;
+      cursor:pointer; box-shadow:0 6px 15px #25d366aa;
+      margin-top:1.5rem; user-select:none; transition:background .3s;
+    }
+    button:hover { background:#1da851; }
+    input#news-search {
+      width:100%; padding:.5rem 1rem; font-size:1rem;
+      border-radius:10px; border:none; margin-bottom:1rem;
+    }
+    #news-container {
+      display:flex; flex-direction:column; gap:1.5rem;
+    }
+    .news-item {
+      background:rgba(37,211,102,0.1); border-radius:10px;
+      padding:1rem; display:flex; gap:1rem; color:#ddd;
+    }
+    .news-image {
+      width:150px; height:100px; border-radius:10px;
+      object-fit:cover; flex-shrink:0; background:#111;
+    }
+    .news-content {
+      flex:1; display:flex; flex-direction:column;
+    }
+    .news-title {
+      font-weight:700; font-size:1.1rem; color:#25d366;
+      margin-bottom:.3rem; user-select:none;
+    }
+    .news-description { font-size:.9rem; margin-bottom:.3rem; }
+    .news-date {
+      font-size:.8rem; color:#aaa; margin-bottom:.5rem;
+      user-select:none;
+    }
+    .news-excerpt {
+      font-size:.85rem; color:#ccc; flex-grow:1; user-select:text;
+    }
+    .news-link {
+      align-self:flex-start; margin-top:.5rem; font-weight:600;
+      color:#25d366; text-decoration:none; user-select:none;
+    }
+    .news-link:hover { text-decoration:underline; }
+    #events-list {
+      list-style:none; padding:0;
+    }
+    .event-item {
+      background:rgba(255,255,255,0.1); border-radius:10px;
+      padding:1rem; margin-bottom:1rem;
+    }
+    #contact-form input,#contact-form textarea {
+      width:100%; padding:.8rem 1rem; border-radius:10px;
+      border:none; font-size:1rem; resize:vertical;
+      margin-bottom:1rem;
+    }
+    footer {
+      text-align:center; padding:2rem 0; color:#aaa;
+      background:rgba(0,0,0,0.5);
+    }
+  </style>
 </head>
 <body>
-<div id="particles-js"></div>
 
-<header>
-  <h1 id="logo">Guest Community</h1>
-  <nav>
-    <a class="nav-link active" data-section="home">Home</a>
-    <a class="nav-link" data-section="meteo">Meteo</a>
-    <a class="nav-link" data-section="notizie">Notizie</a>
-    <a class="nav-link" data-section="quote">Quote</a>
-    <a class="nav-link" data-section="ora">Ora</a>
-  </nav>
-</header>
+<div id="ring-intro">
+  <div id="ring-text">Guest Community</div>
+  <div id="ring-subtext">Caricamento in corso...</div>
+</div>
 
-<main>
-  <section id="home" class="active">
-    <h2>Benvenuto nella Guest Community</h2>
-    <p>Unisciti al nostro gruppo WhatsApp esclusivo per condividere idee, risorse e nuove esperienze.</p>
-    <button class="join-btn" id="join-btn">Unisciti al gruppo</button>
-  </section>
+<div id="main-site" tabindex="0">
+  <header>
+    <h1>Guest Community</h1>
+    <nav>
+      <a class="nav-link active" data-section="home">Home</a>
+      <a class="nav-link" data-section="meteo">Meteo</a>
+      <a class="nav-link" data-section="notizie">Notizie</a>
+      <a class="nav-link" data-section="ora">Ora</a>
+      <a class="nav-link" data-section="eventi">Eventi</a>
+      <a class="nav-link" data-section="contatti">Contatti</a>
+    </nav>
+  </header>
 
-  <section id="meteo">
-    <h2>Meteo in tempo reale</h2>
-    <p id="meteo-info" class="loading">Caricamento meteo...</p>
-  </section>
+  <main>
+    <section id="home" class="active">
+      <h2>Benvenuto nella Guest Community</h2>
+      <p>Unisciti al gruppo WhatsApp per condividere idee, risorse e nuove esperienze.</p>
+      <button onclick="window.open('https://chat.whatsapp.com/YOUR-LINK','_blank')">Unisciti al gruppo</button>
+    </section>
 
-  <section id="notizie">
-    <h2>Ultime notizie</h2>
-    <input type="text" id="news-search" placeholder="Cerca notizie (es: tecnologia)" style="padding:0.5rem; border-radius:6px; border:none; max-width: 300px; margin-bottom: 1rem;" />
-    <p id="news-info" class="loading">Caricamento notizie...</p>
-    <ul class="news-list" id="news-list"></ul>
-  </section>
+    <section id="meteo">
+      <h2>Meteo</h2>
+      <p id="meteo-info">Caricamento meteo...</p>
+    </section>
 
-  <section id="quote">
-    <h2>Citazione motivazionale</h2>
-    <p id="quote-text" class="loading">Caricamento citazione...</p>
-    <button class="join-btn" id="new-quote-btn">Nuova citazione</button>
-  </section>
+    <section id="notizie">
+      <h2>Ultime notizie</h2>
+      <input id="news-search" placeholder="Cerca notizie..." autocomplete="off" />
+      <p id="news-info">Caricamento notizie...</p>
+      <div id="news-container"></div>
+    </section>
 
-  <section id="ora">
-    <h2>Ora attuale</h2>
-    <p id="time-info" class="loading">Caricamento ora...</p>
-    <p id="timezone-info"></p>
-  </section>
-</main>
+    <section id="ora">
+      <h2>Ora attuale</h2>
+      <p id="time-info">Caricamento ora...</p>
+      <p id="timezone-info"></p>
+    </section>
 
-<footer>
-  © 2025 Guest Community • Powered by WebMagix
-</footer>
+    <section id="eventi">
+      <h2>Eventi prossimi</h2>
+      <ul id="events-list"></ul>
+    </section>
+
+    <section id="contatti">
+      <h2>Contattaci</h2>
+      <form id="contact-form" method="POST">
+        <input type="text" name="name" placeholder="Nome completo" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <textarea name="message" placeholder="Messaggio" required></textarea>
+        <button type="submit">Invia messaggio</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>© 2025 Guest Community • Powered by WebMagix</footer>
+</div>
 
 <script>
-  tsParticles.load("particles-js", {
-    fullScreen: { enable: true },
-    particles: {
-      number: { value: 80 },
-      size: { value: 4 },
-      move: { enable: true, speed: 1.8 },
-      links: { enable: true, color: "#25d366" },
-      color: { value: "#25d366" },
-      interactivity: {
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          onClick: { enable: true, mode: "push" }
-        },
-        modes: {
-          repulse: { distance: 100 },
-          push: { quantity: 4 }
-        }
+(() => {
+  const ringText = document.getElementById('ring-text'), ringSubtext = document.getElementById('ring-subtext')
+  gsap.to(ringText,{opacity:1,duration:1})
+  gsap.to(ringSubtext,{opacity:1,duration:1,delay:0.5})
+  setTimeout(() => {
+    gsap.to([ringText,ringSubtext],{opacity:0,duration:1})
+    gsap.to('#ring-intro',{opacity:0,duration:1,delay:0.5,onComplete: () => {
+      document.getElementById('ring-intro').remove()
+      startApp()
+    }})
+  }, 3500)
+
+  function startApp() {
+    const mainSite = document.getElementById('main-site')
+    mainSite.style.display = 'block'
+    gsap.to(mainSite,{opacity:1,duration:1.5})
+    const navLinks = document.querySelectorAll('.nav-link'), sections = document.querySelectorAll('main section')
+    navLinks.forEach(l => l.addEventListener('click', () => {
+      navLinks.forEach(x => x.classList.remove('active'))
+      l.classList.add('active')
+      const tgt = l.getAttribute('data-section')
+      sections.forEach(s => s.classList.toggle('active', s.id === tgt))
+    }))
+
+    function weatherCodeToDesc(c) {
+      const map = {
+        0:"Sereno",1:"Parz. nuvoloso",2:"Nuvoloso",3:"Coperto",
+        45:"Nebbia",48:"Nebbia brina",51:"Pioggerella",
+        61:"Pioggia",71:"Neve",95:"Temporale",99:"Grandine"
       }
+      return map[c]||"Sconosciuto"
     }
-  });
 
-  function joinWhatsApp() {
-    Swal.fire({
-      title: "Unisciti a Guest Community",
-      text: "Vuoi entrare nel gruppo WhatsApp?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sì, vai al gruppo",
-      cancelButtonText: "Annulla"
-    }).then(result => {
-      if(result.isConfirmed) {
-        window.location.href = "https://chat.whatsapp.com/YOUR_LINK";
+    async function fetchMeteo() {
+      const info = document.getElementById('meteo-info')
+      if(!navigator.geolocation) {
+        info.textContent = "Geolocalizzazione non supportata"
+        return
       }
-    });
-  }
-  document.getElementById("join-btn").addEventListener("click", joinWhatsApp);
-
-  const navLinks = document.querySelectorAll(".nav-link");
-  const sections = document.querySelectorAll("main section");
-  navLinks.forEach(link => {
-    link.addEventListener("click", () => {
-      navLinks.forEach(l => l.classList.remove("active"));
-      link.classList.add("active");
-      const target = link.getAttribute("data-section");
-      sections.forEach(sec => {
-        if(sec.id === target) {
-          sec.classList.add("active");
-          gsap.fromTo(sec, {opacity:0, y:30}, {opacity:1, y:0, duration:0.5, ease:"power3.out"});
-        } else {
-          sec.classList.remove("active");
-        }
-      });
-    });
-  });
-
-  async function fetchMeteo() {
-    const info = document.getElementById("meteo-info");
-    try {
-      if (!navigator.geolocation) throw "Geolocalizzazione non supportata";
       navigator.geolocation.getCurrentPosition(async pos => {
-        const lat = pos.coords.latitude.toFixed(2);
-        const lon = pos.coords.longitude.toFixed(2);
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=celsius&windspeed_unit=kmh&timezone=auto`;
-        const res = await fetch(url);
-        if(!res.ok) throw "Errore API meteo";
-        const data = await res.json();
-        const c = data.current_weather.temperature;
-        const w = data.current_weather.weathercode;
-        const ws = data.current_weather.windspeed;
-        const weatherDesc = weatherCodeToDesc(w);
-        info.textContent = `Temperatura: ${c}°C, Condizioni: ${weatherDesc}, Vento: ${ws} km/h`;
+        try {
+          const lat = pos.coords.latitude.toFixed(2), lon = pos.coords.longitude.toFixed(2)
+          const res = await fetch(`/api/meteo?lat=${lat}&lon=${lon}`)
+          const data = await res.json()
+          const w = data.current_weather
+          info.textContent = `${w.temperature}°C, ${weatherCodeToDesc(w.weathercode)}, vento ${w.windspeed} km/h`
+        } catch {
+          info.textContent = "Errore caricamento meteo"
+        }
       }, () => {
-        info.textContent = "Permesso geolocalizzazione negato";
-      });
-    } catch(e) {
-      info.textContent = "Errore nel caricamento meteo";
-      info.classList.add("error");
+        info.textContent = "Geolocalizzazione negata"
+      })
     }
-  }
-  function weatherCodeToDesc(code) {
-    const map = {
-      0: "Sereno",
-      1: "Parzialmente nuvoloso",
-      2: "Nuvoloso",
-      3: "Coperto",
-      45: "Nebbia",
-      48: "Nebbia con depositi di brina",
-      51: "Pioggerella leggera",
-      53: "Pioggerella moderata",
-      55: "Pioggerella intensa",
-      61: "Pioggia leggera",
-      63: "Pioggia moderata",
-      65: "Pioggia intensa",
-      71: "Neve leggera",
-      73: "Neve moderata",
-      75: "Neve intensa",
-      80: "Pioggia a rovesci leggeri",
-      81: "Pioggia a rovesci moderati",
-      82: "Pioggia a rovesci intensi",
-      95: "Temporale",
-      99: "Temporale con grandine"
-    };
-    return map[code] || "Condizioni sconosciute";
-  }
 
-  async function fetchNotizie(query = "tecnologia") {
-    const info = document.getElementById("news-info");
-    const list = document.getElementById("news-list");
-    info.textContent = "Caricamento notizie...";
-    list.innerHTML = "";
-    try {
-      const res = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=it&pageSize=5&apiKey=demo`);
-      if(!res.ok) throw "Errore API notizie";
-      const data = await res.json();
-      if(data.articles.length === 0) {
-        info.textContent = "Nessuna notizia trovata";
-        return;
+    let debounce
+    async function fetchNotizie(q='tecnologia') {
+      const info = document.getElementById('news-info'), cont = document.getElementById('news-container')
+      info.textContent = "Caricamento notizie..."
+      cont.innerHTML = ''
+      try {
+        const res = await fetch(`/api/notizie?q=${encodeURIComponent(q)}`)
+        const data = await res.json()
+        if(!data.articles?.length) {
+          info.textContent = "Nessuna notizia trovata"
+          return
+        }
+        const filtered = data.articles.filter(a => a.image && a.description)
+        if(!filtered.length) {
+          info.textContent = "Nessuna notizia rilevante trovata"
+          return
+        }
+        info.textContent = ''
+        filtered.forEach(a => {
+          const item = document.createElement('div')
+          item.className = 'news-item'
+          item.innerHTML = `
+            <img class="news-image" src="${a.image}" alt="">
+            <div class="news-content">
+              <div class="news-title">${a.title}</div>
+              <div class="news-description">${a.description}</div>
+              <div class="news-date">${new Date(a.publishedAt).toLocaleString("it-IT",{dateStyle:"medium",timeStyle:"short"})}</div>
+              <div class="news-excerpt">${a.content ? a.content.split('[')[0] : ''}</div>
+              <a class="news-link" href="${a.url}" target="_blank">Leggi di più</a>
+            </div>
+          `
+          cont.appendChild(item)
+        })
+      } catch {
+        info.textContent = "Errore caricamento notizie"
       }
-      info.textContent = "";
-      data.articles.forEach(a => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${a.url}" target="_blank" rel="noopener">${a.title}</a><br><small>${new Date(a.publishedAt).toLocaleDateString()}</small>`;
-        list.appendChild(li);
-      });
-    } catch(e) {
-      info.textContent = "Errore nel caricamento notizie";
-      info.classList.add("error");
     }
-  }
+    document.getElementById('news-search').addEventListener('input', e => {
+      clearTimeout(debounce)
+      const q = e.target.value.trim() || 'tecnologia'
+      debounce = setTimeout(() => fetchNotizie(q), 500)
+    })
 
-  async function fetchQuote() {
-    const quoteEl = document.getElementById("quote-text");
-    quoteEl.textContent = "Caricamento citazione...";
-    try {
-      const res = await fetch("https://quote-garden.herokuapp.com/api/v3/quotes/random");
-      if(!res.ok) throw "Errore API quote";
-      const data = await res.json();
-      quoteEl.textContent = `"${data.data[0].quoteText}" — ${data.data[0].quoteAuthor || "Autore sconosciuto"}`;
-    } catch(e) {
-      quoteEl.textContent = "Errore nel caricamento citazione";
-      quoteEl.classList.add("error");
+    function updateTime() {
+      document.getElementById('time-info').textContent = new Date().toLocaleTimeString()
+      document.getElementById('timezone-info').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone
     }
-  }
 
-  async function fetchOra() {
-    const timeInfo = document.getElementById("time-info");
-    const tzInfo = document.getElementById("timezone-info");
-    timeInfo.textContent = "Caricamento ora...";
-    tzInfo.textContent = "";
-    try {
-      const res = await fetch("http://worldtimeapi.org/api/ip");
-      if(!res.ok) throw "Errore API ora";
-      const data = await res.json();
-      const datetime = new Date(data.datetime);
-      timeInfo.textContent = datetime.toLocaleTimeString();
-      tzInfo.textContent = `Fuso orario: ${data.timezone}`;
-    } catch(e) {
-      timeInfo.textContent = "Errore nel caricamento ora";
-      timeInfo.classList.add("error");
+    async function fetchEventi() {
+      const ul = document.getElementById('events-list')
+      ul.innerHTML = ''
+      try {
+        const res = await fetch('/api/eventi')
+        const data = await res.json()
+        if(!data.events || !data.events.length) {
+          ul.innerHTML = '<li class="event-item">Nessun evento trovato</li>'
+          return
+        }
+        data.events.slice(0,5).forEach(ev => {
+          const li = document.createElement('li')
+          li.className = 'event-item'
+          li.innerHTML = `<strong>${ev.name.text}</strong><br>` +
+                         `${new Date(ev.start.local).toLocaleDateString("it-IT",{dateStyle:"medium",timeStyle:"short"})}<br>` +
+                         `${ev.venue_id ? 'Luogo ID: ' + ev.venue_id : ''}`
+          ul.appendChild(li)
+        })
+      } catch {
+        ul.innerHTML = '<li class="event-item">Errore caricamento eventi</li>'
+      }
     }
+
+    document.getElementById('contact-form').addEventListener('submit', async e => {
+      e.preventDefault()
+      const form = e.target
+      const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        message: form.message.value.trim()
+      }
+      if(!data.name || !data.email || !data.message) return
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        })
+        const json = await res.json()
+        if(json.success) {
+          Swal.fire('Messaggio inviato', 'Grazie per averci contattato!', 'success')
+          form.reset()
+        } else {
+          Swal.fire('Errore', 'Impossibile inviare il messaggio', 'error')
+        }
+      } catch {
+        Swal.fire('Errore', 'Impossibile inviare il messaggio', 'error')
+      }
+    })
+
+    fetchMeteo()
+    fetchNotizie()
+    updateTime()
+    setInterval(updateTime, 1000)
+    fetchEventi()
   }
-
-  document.getElementById("new-quote-btn").addEventListener("click", fetchQuote);
-  document.getElementById("news-search").addEventListener("keyup", e => {
-    if(e.key === "Enter") fetchNotizie(e.target.value || "tecnologia");
-  });
-
-  window.onload = () => {
-    fetchMeteo();
-    fetchNotizie();
-    fetchQuote();
-    fetchOra();
-  };
+})()
 </script>
+
 </body>
 </html>
