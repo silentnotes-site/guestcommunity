@@ -1,0 +1,18 @@
+{
+  "name": "guest-community",
+  "version": "1.0.0",
+  "description": "Sito ufficiale della Guest Community",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Nessuna build necessaria'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.9"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
+
