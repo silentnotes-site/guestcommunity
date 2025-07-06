@@ -29,6 +29,11 @@ exports.handler = async (event) => {
       const url = `${GNEWS_API_URL}?q=${encodeURIComponent(q)}&lang=it&max=8&token=${GNEWS_API_KEY}`
       const res = await fetch(url)
       const data = await res.json()
+
+      if (!data || !Array.isArray(data.articles)) {
+        return response(200, { articles: [] })
+      }
+
       return response(200, data)
     }
 
@@ -56,7 +61,6 @@ exports.handler = async (event) => {
     }
 
     return response(404, { error: 'API non trovata' })
-
   } catch (e) {
     return response(500, { error: 'Errore interno', details: e.message })
   }
@@ -65,7 +69,11 @@ exports.handler = async (event) => {
 function response(statusCode, body) {
   return {
     statusCode,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    },
     body: JSON.stringify(body)
   }
 }
