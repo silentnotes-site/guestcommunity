@@ -18,7 +18,6 @@ exports.handler = async (event) => {
     if (path === '/api/meteo' && method === 'GET') {
       const lat = query.get('lat'), lon = query.get('lon')
       if (!lat || !lon) return response(400, { error: 'Manca lat o lon' })
-
       const url = `${OPEN_METEO_URL}?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=celsius&timezone=auto`
       const res = await fetch(url)
       const data = await res.json()
@@ -30,11 +29,7 @@ exports.handler = async (event) => {
       const url = `${GNEWS_API_URL}?q=${encodeURIComponent(q)}&lang=it&max=8&token=${GNEWS_API_KEY}`
       const res = await fetch(url)
       const data = await res.json()
-
-      if (!data || !Array.isArray(data.articles)) {
-        return response(200, { articles: [] })
-      }
-
+      if (!data || !Array.isArray(data.articles)) return response(200, { articles: [] })
       return response(200, data)
     }
 
@@ -65,8 +60,14 @@ exports.handler = async (event) => {
 
     if (path === '/api/chatbot' && method === 'POST') {
       const body = JSON.parse(event.body)
-      if (!body.messages) return response(400, { error: 'Mancano i messaggi' })
-
+      let messages = []
+      if (Array.isArray(body.messages)) {
+        messages = body.messages
+      } else if (typeof body.message === 'string') {
+        messages = [{ role: 'user', content: body.message }]
+      } else {
+        return response(400, { error: 'Mancano i messaggi' })
+      }
       const res = await fetch('https://api.nlpcloud.io/v1/chatdolphin/chat', {
         method: 'POST',
         headers: {
@@ -75,10 +76,9 @@ exports.handler = async (event) => {
         },
         body: JSON.stringify({
           session: 'sessione-guest',
-          messages: body.messages
+          messages
         })
       })
-
       const data = await res.json()
       return response(200, data)
     }
