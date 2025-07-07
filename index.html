@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js" defer></script>
+  <script src="https://files.bpcontent.cloud/2025/07/07/21/20250707213718-YIGL8TMX.js" defer></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;background:linear-gradient(to right,#0f0c29,#302b63,#24243e);overflow:hidden;color:#fff}
@@ -26,7 +28,6 @@
     button{background:#25d366;border:none;border-radius:30px;padding:1rem 2rem;font-size:1.2rem;color:#fff;cursor:pointer;box-shadow:0 6px 15px #25d366aa;margin-top:1.5rem;user-select:none;transition:background .3s}
     button:hover{background:#1da851}
     input,textarea{width:100%;padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem;resize:vertical;margin-bottom:1rem}
-    /* Notizie */
     input#news-search{padding:.5rem 1rem;font-size:1rem;border-radius:10px;border:none;margin-bottom:1rem}
     #news-container{display:flex;flex-direction:column;gap:1.5rem}
     .news-item{background:rgba(37,211,102,0.1);border-radius:10px;padding:1rem;display:flex;gap:1rem;color:#ddd}
@@ -38,10 +39,8 @@
     .news-excerpt{font-size:.85rem;color:#ccc;flex-grow:1;user-select:text}
     .news-link{align-self:flex-start;margin-top:.5rem;font-weight:600;color:#25d366;text-decoration:none;user-select:none}
     .news-link:hover{text-decoration:underline}
-    /* Eventi */
     #events-list{list-style:none;padding:0}
     .event-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:1rem;margin-bottom:1rem}
-    /* Contatti */
     #contact-form input,#contact-form textarea{margin-bottom:1rem}
   </style>
 </head>
@@ -60,6 +59,7 @@
       <a class="nav-link" data-section="ora">Ora</a>
       <a class="nav-link" data-section="eventi">Eventi</a>
       <a class="nav-link" data-section="contatti">Contatti</a>
+      <a class="nav-link" id="chatbot-link" href="#" tabindex="0">Chatbot</a>
     </nav>
   </header>
   <main>
@@ -125,6 +125,11 @@
       secs.forEach(s=> s.id===a.dataset.section ? s.style.display='block' : s.style.display='none' )
     }))
 
+    document.getElementById('chatbot-link').addEventListener('click', e => {
+      e.preventDefault()
+      if(window.botpressWebChat) window.botpressWebChat.toggle()
+    })
+
     async function fetchApi(u){
       try { let r = await fetch(u); if(!r.ok) throw ''; return await r.json() }
       catch { return null }
@@ -149,7 +154,7 @@
       info.textContent=''
       d.articles.filter(a=>a.image&&a.description).forEach(a=>{
         const el=document.createElement('div'); el.className='news-item'
-        el.innerHTML=`<img class="news-image" src="${a.image}" alt=""/><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link"href="${a.url}"target="_blank">Leggi di più</a></div>`
+        el.innerHTML=`<img class="news-image" src="${a.image}" alt=""/><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link" href="${a.url}" target="_blank">Leggi di più</a></div>`
         cont.appendChild(el)
       })
     }
@@ -181,10 +186,7 @@
     })
 
     fetchMeteo(); fetchNotizie(); updateTime(); setInterval(updateTime,1000); fetchEventi()
-
-    const script = document.createElement('script')
-<script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js" defer></script>
-<script src="https://files.bpcontent.cloud/2025/07/07/21/20250707213718-YIGL8TMX.js" defer></script>
+  }
 })()
 </script>
 </body>
