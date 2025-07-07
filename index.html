@@ -14,11 +14,40 @@
     #ring-text{font-size:6rem;font-weight:700;letter-spacing:.3em;color:#25d366;text-shadow:0 0 20px #25d366cc;opacity:0}
     #ring-subtext{margin-top:1rem;font-size:1.4rem;color:#aaa;opacity:0}
     #main-site{display:none;position:relative;z-index:2;height:100vh;overflow-y:auto;padding-bottom:60px}
-    header{position:sticky;top:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);padding:1rem 3rem;display:flex;justify-content:space-between;align-items:center;z-index:10}
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      overflow-x: auto;
+    }
     header h1{font-size:1.8rem;user-select:none}
-    nav{display:flex;gap:1.5rem;flex-wrap:wrap}
-    nav a{color:#ccc;font-weight:600;cursor:pointer;text-decoration:none;padding-bottom:4px;border-bottom:2px solid transparent;transition:color .3s,border-color .3s}
-    nav a:hover,nav a.active{color:#25d366;border-bottom-color:#25d366}
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    nav a {
+      color: #ccc;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+      transition: color .3s, border-color .3s;
+      white-space: nowrap;
+    }
+    nav a:hover,
+    nav a.active {
+      color: #25d366;
+      border-bottom-color: #25d366;
+    }
     main{max-width:900px;margin:80px auto 40px;padding:0 20px}
     section{display:none}
     section.active{display:block}
@@ -169,8 +198,7 @@
     let td;
     const fetchNotizie=async(q='tecnologia')=>{
       let info=document.getElementById('news-info'),cont=document.getElementById('news-container');
-      info.textContent="Caricamento notizie...";
-      cont.innerHTML='';
+      info.textContent="Caricamento notizie...";cont.innerHTML='';
       let d=await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`);
       if(!d?.articles?.length){
         info.textContent="Nessuna notizia";
@@ -196,15 +224,15 @@
     }
 
     const fetchEventi=async()=>{
-      let ul=document.getElementById('events-list');
-      ul.innerHTML='';
+      let ul=document.getElementById('events-list');ul.innerHTML='';
       let d=await fetchApi('/api/eventi');
       if(!d?.events?.length){
         ul.innerHTML='<li class="event-item">Nessun evento</li>';
         return;
       }
       d.events.slice(0,5).forEach(ev=>{
-        let li=document.createElement('li');li.className='event-item';
+        let li=document.createElement('li');
+        li.className='event-item';
         li.innerHTML=`<strong>${ev.name.text}</strong><br>${new Date(ev.start.local).toLocaleDateString('it-IT',{dateStyle:'medium',timeStyle:'short'})}`;
         ul.appendChild(li);
       });
@@ -228,50 +256,45 @@
       }
     });
 
-    // CHATBOT
-    const chatMessages = document.getElementById('chatbot-messages');
-    const chatInput = document.getElementById('chatbot-input');
-    const chatSend = document.getElementById('chatbot-send');
+    // Chatbot - API: https://api.italianchatbot.com (fittizia)
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    const chatbotInput = document.getElementById('chatbot-input');
+    const chatbotSend = document.getElementById('chatbot-send');
 
-    let chatHistory = [];
-
-    function addChatMessage(who, text){
+    function addChatMessage(text, sender='bot'){
       const div = document.createElement('div');
-      div.className = 'chat-message ' + (who === 'user' ? 'user' : 'bot');
+      div.className = 'chat-message ' + (sender === 'user' ? 'user' : 'bot');
       div.textContent = text;
-      chatMessages.appendChild(div);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      chatbotMessages.appendChild(div);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    chatSend.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter' && !e.shiftKey){
+    chatbotSend.addEventListener('click', sendMessage);
+    chatbotInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
       }
     });
 
     async function sendMessage(){
-      let msg = chatInput.value.trim();
+      const msg = chatbotInput.value.trim();
       if(!msg) return;
-      addChatMessage('user', msg);
-      chatInput.value = '';
-      chatHistory.push({role:'user', content: msg});
-      addChatMessage('bot', 'Sto scrivendo...');
-      try {
+      addChatMessage(msg, 'user');
+      chatbotInput.value = '';
+      addChatMessage('Sto scrivendo...', 'bot');
+
+      try{
         const res = await fetch('/api/chatbot', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({messages: chatHistory})
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({message: msg})
         });
         const data = await res.json();
-        chatMessages.lastChild.textContent = data.reply || data.message || 'Nessuna risposta';
-        if(data.reply) chatHistory.push({role:'bot', content: data.reply});
-        else if(data.message) chatHistory.push({role:'bot', content: data.message});
+        chatbotMessages.lastChild.textContent = data.reply || 'Nessuna risposta';
       } catch {
-        chatMessages.lastChild.textContent = 'Errore nella risposta';
+        chatbotMessages.lastChild.textContent = 'Errore nella risposta';
       }
-      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     fetchMeteo();
