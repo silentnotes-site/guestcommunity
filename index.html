@@ -140,11 +140,6 @@
       secs.forEach(s=> s.id===a.dataset.section ? s.style.display='block' : s.style.display='none' )
     }))
 
-    document.getElementById('chatbot-link').addEventListener('click', e => {
-      e.preventDefault()
-      if(window.botpressWebChat) window.botpressWebChat.toggle()
-    })
-
     async function fetchApi(u){
       try { let r = await fetch(u); if(!r.ok) throw ''; return await r.json() }
       catch { return null }
