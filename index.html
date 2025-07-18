@@ -200,14 +200,14 @@
     fetchMeteo();fetchNotizie();updateTime();setInterval(updateTime,1000);fetchEventi()
 
     const commands=[
-      {cmd:'/dedica',desc:'Un momento speciale'},
+      {cmd:'/dedica',desc:'Una sorpresina per te!'},
       {cmd:'/saluto',desc:'Un saluto amichevole'},
       {cmd:'/barzelletta',desc:'Ridiamoci su'},
-      {cmd:'/meme',desc:'Una risata in immagine'},
+      {cmd:'/sadface',desc:'Una faccia sad :<'},
       {cmd:'/oroscopo',desc:'Stelle e destino'},
-      {cmd:'/gif',desc:'Momenti animati'},
+      {cmd:'/gif',desc:'Gif a caso :/'},
       {cmd:'/quiz',desc:'Metti alla prova la mente'},
-      {cmd:'/meteo',desc:'Meteo istantaneo'},
+      {cmd:'/secret',desc:'Apri e lo scopri'},
       {cmd:'/aforisma',desc:'Parole ispirate'},
       {cmd:'/info',desc:'Scopri il sito'},
       {cmd:'/chiedi',desc:'Parla con l’AI'},
@@ -231,7 +231,7 @@
       c=c.trim().toLowerCase()
       if(!c.startsWith('/')){Swal.fire('Errore','Scegli un comando dalla lista','error');return}
       switch(c){
-       case '/dedica':
+case '/dedica':
   document.body.innerHTML = ''
   document.head.innerHTML = `
     <style>
@@ -242,25 +242,24 @@
       #video-container {
         position: fixed; top:0; left:0; width:100vw; height:100vh; overflow:hidden;
         background: black;
-        filter: brightness(0.7) saturate(1.2);
       }
       video {
-        width:100vw; height:100vh; object-fit:cover;
+        max-width:100vw; max-height:100vh; width:auto; height:auto; object-fit:contain;
       }
     </style>`
   const container = document.createElement('div')
   container.id = 'video-container'
   const video = document.createElement('video')
-  video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4' 
+  video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4'
   video.autoplay = true
   video.loop = false
-  video.muted = true
+  video.muted = false
   video.playsInline = true
   video.controls = false
   video.disablePictureInPicture = true
   video.oncontextmenu = e => e.preventDefault()
   video.addEventListener('ended', () => {
-    setTimeout(() => location.reload(), 3000) 
+    setTimeout(() => location.reload(), 3000)
   })
   container.appendChild(video)
   document.body.appendChild(container)
@@ -272,12 +271,12 @@
         case '/barzelletta':
           Swal.fire('Barzelletta','Cosa fa un uccello in un bar? Ordina un cucu-tequila!','info')
           break
-        case '/meme':
+        case '/sadface':
           const memes=[
-            'https://i.imgur.com/w3duR07.png',
-            'https://i.imgur.com/3GvwNBf.png',
-            'https://i.imgur.com/AD3MbBi.jpg',
-            'https://i.imgur.com/fHScmpv.jpg'
+            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg'
           ]
           Swal.fire({title:'Meme per te',imageUrl:memes[Math.floor(Math.random()*memes.length)],showCloseButton:true})
           break
@@ -286,8 +285,8 @@
           break
         case '/gif':
           const gifs=[
-            'https://media.giphy.com/media/3o7aCTfyhYawdOXcFW/giphy.gif',
-            'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif'
+            'https://media1.tenor.com/m/6IVxqRE1Tc4AAAAC/papa.gif',
+            'https://media1.tenor.com/m/ex_J-MZ6CRIAAAAC/sybau-lazerdim.gif'
           ]
           Swal.fire({title:'Gif',imageUrl:gifs[Math.floor(Math.random()*gifs.length)],showCloseButton:true})
           break
