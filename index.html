@@ -192,7 +192,7 @@
       const f=e.target,fd=new FormData(f)
       try{
         const j=await(await fetch('https://api.web3forms.com/submit',{method:'POST',body:fd})).json()
-        if(j.success)Swal.fire('Ok','Messaggio inviato','success'),f.reset()
+        if(j.success)Swal.fire('Successo!','Messaggio inviato','success'),f.reset()
         else Swal.fire('Errore',j.message||'Invio fallito','error')
       }catch{Swal.fire('Errore','Problema di rete','error')}
     })
