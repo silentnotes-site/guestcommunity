@@ -7,8 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.botpress.cloud/webchat/v3.1/inject.js" defer></script>
-  <script src="https://files.bpcontent.cloud/2025/07/07/21/20250707213718-YIGL8TMX.js" defer></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{width:100%;height:100%;font-family:'Outfit',sans-serif;background:linear-gradient(to right,#0f0c29,#302b63,#24243e);overflow:hidden;color:#fff}
@@ -28,7 +26,6 @@
     button{background:#25d366;border:none;border-radius:30px;padding:1rem 2rem;font-size:1.2rem;color:#fff;cursor:pointer;box-shadow:0 6px 15px #25d366aa;margin-top:1.5rem;user-select:none;transition:background .3s}
     button:hover{background:#1da851}
     input,textarea{width:100%;padding:.8rem 1rem;border-radius:10px;border:none;font-size:1rem;resize:vertical;margin-bottom:1rem}
-    input#news-search{padding:.5rem 1rem;font-size:1rem;border-radius:10px;border:none;margin-bottom:1rem}
     #news-container{display:flex;flex-direction:column;gap:1.5rem}
     .news-item{background:rgba(37,211,102,0.1);border-radius:10px;padding:1rem;display:flex;gap:1rem;color:#ddd}
     .news-image{width:150px;height:100px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#111}
@@ -41,23 +38,14 @@
     .news-link:hover{text-decoration:underline}
     #events-list{list-style:none;padding:0}
     .event-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:1rem;margin-bottom:1rem}
-    #contact-form input,#contact-form textarea{margin-bottom:1rem}
-    footer {
-      text-align: center;
-      padding: 1rem 0;
-      font-weight: 600;
-      font-size: 1rem;
-      color: #25d366;
-      text-shadow: 0 0 8px #25d366bb;
-      background: rgba(0,0,0,0.4);
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      user-select: none;
-      font-family: 'Outfit', sans-serif;
-      letter-spacing: 0.05em;
-      z-index: 20;
-    }
+    #command-input{width:calc(100% - 120px);padding:1rem;border-radius:15px;border:none;font-size:1rem;background:#111;color:#25d366;font-weight:700;user-select:none;display:inline-block;vertical-align:middle}
+    #command-send{width:100px;display:inline-block;vertical-align:middle;margin-left:10px;}
+    #command-list{display:flex;flex-direction:column;gap:1rem;margin-top:1rem;max-height:300px;overflow-y:auto}
+    .command-item{background:rgba(37,211,102,0.1);padding:1rem;border-radius:15px;cursor:pointer;user-select:none;transition:background .3s}
+    .command-item:hover{background:rgba(37,211,102,0.3)}
+    footer{position:fixed;bottom:0;width:100%;background:rgba(0,0,0,0.4);text-align:center;padding:1rem 0;font-weight:600;color:#25d366;text-shadow:0 0 8px #25d366bb;letter-spacing:.05em;z-index:20;user-select:none}
+    #dedica-container{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#25d366;font-size:3rem;user-select:none;overflow:hidden}
+    #dedica-subtitle{margin-top:2rem;font-size:2rem;max-width:90vw;letter-spacing:.1em;opacity:1;transition:opacity .5s ease-in-out}
   </style>
 </head>
 <body>
@@ -75,53 +63,62 @@
       <a class="nav-link" data-section="ora">Ora</a>
       <a class="nav-link" data-section="eventi">Eventi</a>
       <a class="nav-link" data-section="contatti">Contatti</a>
+      <a class="nav-link" data-section="comandi">Comandi</a>
     </nav>
   </header>
   <main>
     <section id="home" class="active">
       <h2>Benvenuto nella Guest Community</h2>
-      <p>Unisciti al gruppo WhatsApp per condividere idee, risorse e nuove esperienze.</p>
-      <button onclick="window.open('https://chat.whatsapp.com/I9Tw0sIS8ulDD9djqYav36','_blank')">Unisciti al gruppo</button>
+      <p>Unisciti al gruppo WhatsApp per condividere idee e risate.</p>
+      <button onclick="window.open('https://chat.whatsapp.com/I9Tw0sIS8ulDD9djqYav36','_blank')">Partecipa al gruppo</button>
     </section>
     <section id="meteo">
       <h2>Meteo</h2>
-      <p id="meteo-info">Caricamento meteo...</p>
+      <p id="meteo-info">Caricamento...</p>
       <p id="meteo-timezone"></p>
     </section>
     <section id="notizie">
       <h2>Ultime notizie</h2>
-      <input id="news-search" placeholder="Cerca notizie..." autocomplete="off"/>
-      <p id="news-info">Caricamento notizie...</p>
+      <input id="news-search" placeholder="Cerca argomento..." autocomplete="off"/>
+      <p id="news-info">Caricamento...</p>
       <div id="news-container"></div>
     </section>
     <section id="ora">
-      <h2>Ora attuale</h2>
-      <p id="time-info">Caricamento ora...</p>
+      <h2>Ora</h2>
+      <p id="time-info"></p>
       <p id="ora-timezone"></p>
     </section>
     <section id="eventi">
-      <h2>Eventi prossimi</h2>
+      <h2>Eventi futuri</h2>
       <ul id="events-list"></ul>
     </section>
     <section id="contatti">
       <h2>Contattaci</h2>
       <form id="contact-form">
         <input type="hidden" name="access_key" value="9a9e0334-0522-4e37-b34d-7f64d72c463f"/>
-        <input type="text" name="name" placeholder="Nome completo" required/>
+        <input type="text" name="name" placeholder="Nome" required/>
         <input type="email" name="email" placeholder="Email" required/>
         <textarea name="message" placeholder="Messaggio" required></textarea>
         <button type="submit">Invia</button>
       </form>
     </section>
+    <section id="comandi">
+      <h2>Comandi</h2>
+      <div>
+        <input id="command-input" value="/" readonly/>
+        <button id="command-send">Invia</button>
+      </div>
+      <div id="command-list"></div>
+    </section>
   </main>
-  <footer>© 2025 Guest Community • Powered by Tutuu666k Team</footer>
+  <footer>© 2025 Guest Community • Tutuu666k Team</footer>
 </div>
 
 <script>
 (() => {
   gsap.to('#ring-text',{opacity:1,duration:1})
   gsap.to('#ring-subtext',{opacity:1,duration:1,delay:0.5})
-  setTimeout(() => {
+  setTimeout(()=>{
     gsap.to(['#ring-text','#ring-subtext'],{opacity:0,duration:1})
     gsap.to('#ring-intro',{opacity:0,duration:1,delay:0.5,onComplete:()=>{
       document.getElementById('ring-intro').remove()
@@ -132,70 +129,202 @@
   function startApp(){
     document.getElementById('main-site').style.display='block'
     gsap.to('#main-site',{opacity:1,duration:1.5})
-    const navs = document.querySelectorAll('.nav-link')
-    const secs = document.querySelectorAll('main section')
-    navs.forEach(a => a.addEventListener('click', () => {
+    const navs=document.querySelectorAll('.nav-link')
+    const secs=document.querySelectorAll('main section')
+    navs.forEach(a=>a.addEventListener('click',()=>{
       navs.forEach(x=>x.classList.remove('active'))
       a.classList.add('active')
-      secs.forEach(s=> s.id===a.dataset.section ? s.style.display='block' : s.style.display='none' )
+      secs.forEach(s=>s.id===a.dataset.section?s.style.display='block':s.style.display='none')
     }))
 
     async function fetchApi(u){
-      try { let r = await fetch(u); if(!r.ok) throw ''; return await r.json() }
-      catch { return null }
+      try{let r=await fetch(u);if(!r.ok)throw '';return await r.json()}
+      catch{return null}
     }
-    async function fetchMeteo(){
-      if(!navigator.geolocation){ document.getElementById('meteo-info').textContent="Geolocalizzazione non supportata"; return }
+
+    function fetchMeteo(){
+      if(!navigator.geolocation){document.getElementById('meteo-info').textContent='Geolocalizzazione non supportata';return}
       navigator.geolocation.getCurrentPosition(async pos=>{
-        const lat=pos.coords.latitude.toFixed(2), lon=pos.coords.longitude.toFixed(2)
-        const d = await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`)
-        if(!d?.current_weather){ document.getElementById('meteo-info').textContent="Errore meteo"; return }
-        const w=d.current_weather, m={0:"Sereno",1:"Parz.nuvoloso",2:"Nuvoloso",3:"Coperto",45:"Nebbia",48:"Nebbia brina",51:"Pioggerella leggera",53:"Pioggerella moderata",55:"Pioggerella intensa",61:"Pioggia leggera",63:"Pioggia moderata",65:"Pioggia intensa",71:"Neve leggera",73:"Neve moderata",75:"Neve intensa",80:"Rovesci leggeri",81:"Rovesci moderati",82:"Rovesci intensi",95:"Temporale",96:"Temp. con grandine leggera",99:"Temp. con grandine intensa"}
+        const lat=pos.coords.latitude.toFixed(2),lon=pos.coords.longitude.toFixed(2)
+        const d=await fetchApi(`/api/meteo?lat=${lat}&lon=${lon}`)
+        if(!d?.current_weather){document.getElementById('meteo-info').textContent='Impossibile caricare meteo';return}
+        const w=d.current_weather,m={0:"Sereno",1:"Parz.nuvoloso",2:"Nuvoloso",3:"Coperto",45:"Nebbia",48:"Nebbia brina",51:"Pioggerella",53:"Pioggerella",55:"Pioggerella",61:"Pioggia",63:"Pioggia",65:"Pioggia",71:"Neve",73:"Neve",75:"Neve",80:"Rovesci",81:"Rovesci",82:"Rovesci",95:"Temporale",96:"Com.tempesta",99:"Temp.granizo"}
         document.getElementById('meteo-info').textContent=`${w.temperature}°C, ${m[w.weathercode]||'Sconosciuto'}, vento ${w.windspeed} km/h`
-        document.getElementById('meteo-timezone').textContent=`Fuso rilevato: ${d.timezone}`
-      }, ()=>document.getElementById('meteo-info').textContent="Permesso negato")
+        document.getElementById('meteo-timezone').textContent=`Fuso: ${d.timezone}`
+      },()=>document.getElementById('meteo-info').textContent='Permesso negato')
     }
+
     let td
-    const fetchNotizie = async(q='tecnologia') => {
-      const info=document.getElementById('news-info'), cont=document.getElementById('news-container')
-      info.textContent="Caricamento notizie...", cont.innerHTML=''
-      const d = await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`)
-      if(!d?.articles?.length){ info.textContent="Nessuna notizia"; return }
+    async function fetchNotizie(q='tecnologia'){
+      const info=document.getElementById('news-info'),cont=document.getElementById('news-container')
+      info.textContent='Caricamento...';cont.innerHTML=''
+      const d=await fetchApi(`/api/notizie?q=${encodeURIComponent(q)}`)
+      if(!d?.articles?.length){info.textContent='Nessuna notizia';return}
       info.textContent=''
       d.articles.filter(a=>a.image&&a.description).forEach(a=>{
-        const el=document.createElement('div'); el.className='news-item'
-        el.innerHTML=`<img class="news-image" src="${a.image}" alt=""/><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link" href="${a.url}" target="_blank">Leggi di più</a></div>`
+        const el=document.createElement('div');el.className='news-item'
+        el.innerHTML=`<img class="news-image" src="${a.image}" alt=""/><div class="news-content"><div class="news-title">${a.title}</div><div class="news-description">${a.description}</div><div class="news-date">${new Date(a.publishedAt).toLocaleString('it-IT',{dateStyle:'medium',timeStyle:'short'})}</div><div class="news-excerpt">${a.content?.split('[')[0]||''}</div><a class="news-link" href="${a.url}" target="_blank">Leggi altro</a></div>`
         cont.appendChild(el)
       })
     }
-    document.getElementById('news-search').addEventListener('input', e=>{
-      clearTimeout(td); td=setTimeout(()=>fetchNotizie(e.target.value.trim()||'tecnologia'),500)
+    document.getElementById('news-search').addEventListener('input',e=>{
+      clearTimeout(td);td=setTimeout(()=>fetchNotizie(e.target.value.trim()||'tecnologia'),500)
     })
+
     function updateTime(){
       document.getElementById('time-info').textContent=new Date().toLocaleTimeString()
       document.getElementById('ora-timezone').textContent=`Fuso client: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`
     }
-    const fetchEventi = async() => {
-      const ul=document.getElementById('events-list'); ul.innerHTML=''
-      const d = await fetchApi('/api/eventi')
-      if(!d?.events?.length){ ul.innerHTML='<li class="event-item">Nessun evento</li>'; return }
+
+    async function fetchEventi(){
+      const ul=document.getElementById('events-list');ul.innerHTML=''
+      const d=await fetchApi('/api/eventi')
+      if(!d?.events?.length){ul.innerHTML='<li class="event-item">Nessun evento</li>';return}
       d.events.slice(0,5).forEach(ev=>{
-        const li=document.createElement('li'); li.className='event-item'
+        const li=document.createElement('li');li.className='event-item'
         li.innerHTML=`<strong>${ev.name.text}</strong><br>${new Date(ev.start.local).toLocaleDateString('it-IT',{dateStyle:'medium',timeStyle:'short'})}`
         ul.appendChild(li)
       })
     }
-    document.getElementById('contact-form').addEventListener('submit', async e=>{
+
+    document.getElementById('contact-form').addEventListener('submit',async e=>{
       e.preventDefault()
-      const f=e.target, fd=new FormData(f)
-      try {
-        const j = await (await fetch('https://api.web3forms.com/submit',{method:'POST',body:fd})).json()
-        if(j.success){ Swal.fire({icon:'success',title:'Messaggio inviato!',text:j.message}); f.reset() }
-        else { Swal.fire({icon:'error',title:'Errore',text:j.message||'Invio fallito'}) }
-      } catch { Swal.fire({icon:'error',title:'Errore di rete',text:'Riprova'}) }
+      const f=e.target,fd=new FormData(f)
+      try{
+        const j=await(await fetch('https://api.web3forms.com/submit',{method:'POST',body:fd})).json()
+        if(j.success)Swal.fire('Ok','Messaggio inviato','success'),f.reset()
+        else Swal.fire('Errore',j.message||'Invio fallito','error')
+      }catch{Swal.fire('Errore','Problema di rete','error')}
     })
 
-    fetchMeteo(); fetchNotizie(); updateTime(); setInterval(updateTime,1000); fetchEventi()
+    fetchMeteo();fetchNotizie();updateTime();setInterval(updateTime,1000);fetchEventi()
+
+    const commands=[
+      {cmd:'/dedica',desc:'Un momento speciale'},
+      {cmd:'/saluto',desc:'Un saluto amichevole'},
+      {cmd:'/barzelletta',desc:'Ridiamoci su'},
+      {cmd:'/meme',desc:'Una risata in immagine'},
+      {cmd:'/oroscopo',desc:'Stelle e destino'},
+      {cmd:'/gif',desc:'Momenti animati'},
+      {cmd:'/quiz',desc:'Metti alla prova la mente'},
+      {cmd:'/meteo',desc:'Meteo istantaneo'},
+      {cmd:'/aforisma',desc:'Parole ispirate'},
+      {cmd:'/info',desc:'Scopri il sito'},
+      {cmd:'/chiedi',desc:'Parla con l’AI'},
+      {cmd:'/riflessione',desc:'Pensieri profondi'},
+      {cmd:'/casuale',desc:'Qualcosa di inaspettato'}
+    ]
+
+    const list=document.getElementById('command-list'),input=document.getElementById('command-input')
+    commands.forEach(c=>{
+      const el=document.createElement('div')
+      el.className='command-item'
+      el.textContent=`${c.cmd} – ${c.desc}`
+      el.onclick=()=>input.value=c.cmd
+      list.appendChild(el)
+    })
+
+    document.getElementById('command-send').addEventListener('click',()=>eseguiComando(input.value))
+    input.addEventListener('keydown',e=>e.key==='Enter'&&eseguiComando(input.value))
+
+    function eseguiComando(c){
+      c=c.trim().toLowerCase()
+      if(!c.startsWith('/')){Swal.fire('Errore','Scegli un comando dalla lista','error');return}
+      switch(c){
+       case '/dedica':
+  document.body.innerHTML = ''
+  document.head.innerHTML = `
+    <style>
+      body {
+        margin:0; background:#000; overflow:hidden; user-select:none;
+        display:flex; align-items:center; justify-content:center; height:100vh; 
+      }
+      #video-container {
+        position: fixed; top:0; left:0; width:100vw; height:100vh; overflow:hidden;
+        background: black;
+        filter: brightness(0.7) saturate(1.2);
+      }
+      video {
+        width:100vw; height:100vh; object-fit:cover;
+      }
+    </style>`
+  const container = document.createElement('div')
+  container.id = 'video-container'
+  const video = document.createElement('video')
+  video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4' 
+  video.autoplay = true
+  video.loop = false
+  video.muted = true
+  video.playsInline = true
+  video.controls = false
+  video.disablePictureInPicture = true
+  video.oncontextmenu = e => e.preventDefault()
+  video.addEventListener('ended', () => {
+    setTimeout(() => location.reload(), 3000) 
+  })
+  container.appendChild(video)
+  document.body.appendChild(container)
+  break
+
+        case '/saluto':
+          Swal.fire('Ciao!','Un abbraccio virtuale da Guest Community','success')
+          break
+        case '/barzelletta':
+          Swal.fire('Barzelletta','Cosa fa un uccello in un bar? Ordina un cucu-tequila!','info')
+          break
+        case '/meme':
+          const memes=[
+            'https://i.imgur.com/w3duR07.png',
+            'https://i.imgur.com/3GvwNBf.png',
+            'https://i.imgur.com/AD3MbBi.jpg',
+            'https://i.imgur.com/fHScmpv.jpg'
+          ]
+          Swal.fire({title:'Meme per te',imageUrl:memes[Math.floor(Math.random()*memes.length)],showCloseButton:true})
+          break
+        case '/oroscopo':
+          Swal.fire('Oroscopo','Oggi la fortuna ti sorride: cogli l’attimo!','info')
+          break
+        case '/gif':
+          const gifs=[
+            'https://media.giphy.com/media/3o7aCTfyhYawdOXcFW/giphy.gif',
+            'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif'
+          ]
+          Swal.fire({title:'Gif',imageUrl:gifs[Math.floor(Math.random()*gifs.length)],showCloseButton:true})
+          break
+        case '/quiz':
+          Swal.fire({
+            title:'Quiz veloce',
+            text:'Qual è la capitale dell’Italia?',
+            input:'radio',
+            inputOptions:{Roma:'Roma',Milano:'Milano',Napoli:'Napoli'},
+            inputValidator:v=>v?undefined:'Scegli un’opzione',
+            showCancelButton:true
+          }).then(r=>{if(r.value==='Roma')Swal.fire('Bravo!','Corretto.','success');else Swal.fire('Peccato','Risposta sbagliata.','error')})
+          break
+        case '/secret':
+          Swal.fire('😑😑😑','Cosa pensavi che ci fosse?','info')
+          break
+        case '/aforisma':
+          const afs=['Sii il cambiamento che vuoi vedere.','Ogni attimo è un nuovo inizio.','La felicità è qui e ora.']
+          Swal.fire('Aforisma',afs[Math.floor(Math.random()*afs.length)],'info')
+          break
+        case '/info':
+          Swal.fire('Info','Guest Community by Tutuu666k Team','info')
+          break
+        case '/chiedi':
+          Swal.fire('AI','Attualmente la funzione AI non è ancora disponibile. 😔','info')
+          break
+        case '/riflessione':
+          Swal.fire('Riflessione','Le grandi idee nascono dal silenzio. :>','info')
+          break
+        case '/casuale':
+          const msgs=['La vita è bella! :>','Sorprenditi ogni giorno. ❤️','Un sorriso cambia tutto. 🥺']
+          Swal.fire('Casuale',msgs[Math.floor(Math.random()*msgs.length)],'info')
+          break
+        default:
+          Swal.fire('Errore','Comando non riconosciuto','error')
+      }
+    }
   }
 })()
 </script>
