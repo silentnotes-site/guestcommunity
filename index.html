@@ -232,69 +232,61 @@ function eseguiComando(c){
   c=c.trim().toLowerCase()
   if(!c.startsWith('/')){Swal.fire('Errore','Scegli un comando dalla lista','error');return}
   switch(c){
-    case '/dedica':
-      document.body.innerHTML = ''
-      document.head.innerHTML = `
-        <style>
-          body {
-            margin: 0;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1a1a, #4b0082);
-            font-family: 'Outfit', sans-serif;
-            user-select: none;
-          }
-          #video-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 90vw;
-            height: 90vh;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 30px;
-            box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
-            backdrop-filter: blur(15px);
-            animation: fadein 2s ease-in-out;
-          }
-          video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 30px;
-            animation: zoomin 10s ease-in-out infinite alternate;
-          }
-          @keyframes fadein {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-          }
-          @keyframes zoomin {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
-          }
-        </style>`
-      const container = document.createElement('div')
-      container.id = 'video-container'
-      const video = document.createElement('video')
-      video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4'
-      video.autoplay = true
-      video.loop = false
-      video.muted = false
-      video.playsInline = true
-      video.controls = false
-      video.disablePictureInPicture = true
-      video.oncontextmenu = e => e.preventDefault()
-      video.addEventListener('ended', () => {
-        setTimeout(() => location.reload(), 3000)
-      })
-      container.appendChild(video)
-      document.body.appendChild(container)
-      break
+ case '/dedica':
+  const overlay = document.createElement('div')
+  overlay.style.position = 'fixed'
+  overlay.style.top = 0
+  overlay.style.left = 0
+  overlay.style.width = '100vw'
+  overlay.style.height = '100vh'
+  overlay.style.zIndex = '99999'
+  overlay.style.display = 'flex'
+  overlay.style.justifyContent = 'center'
+  overlay.style.alignItems = 'center'
+  overlay.style.background = 'linear-gradient(135deg, #1a1a1a, #4b0082)'
+  overlay.style.backdropFilter = 'blur(8px)'
+
+  const container = document.createElement('div')
+  container.style.width = '90vw'
+  container.style.height = '90vh'
+  container.style.borderRadius = '30px'
+  container.style.overflow = 'hidden'
+  container.style.boxShadow = '0 0 80px rgba(0,0,0,0.8)'
+  container.style.position = 'relative'
+
+  const video = document.createElement('video')
+  video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4'
+  video.autoplay = true
+  video.loop = false
+  video.muted = false
+  video.playsInline = true
+  video.controls = false
+  video.disablePictureInPicture = true
+  video.style.width = '100%'
+  video.style.height = '100%'
+  video.style.objectFit = 'contain'
+
+  const closeBtn = document.createElement('button')
+  closeBtn.textContent = 'Chiudi'
+  closeBtn.style.position = 'absolute'
+  closeBtn.style.bottom = '20px'
+  closeBtn.style.right = '20px'
+  closeBtn.style.padding = '10px 20px'
+  closeBtn.style.border = 'none'
+  closeBtn.style.borderRadius = '20px'
+  closeBtn.style.background = '#25d366'
+  closeBtn.style.color = '#fff'
+  closeBtn.style.fontWeight = 'bold'
+  closeBtn.style.cursor = 'pointer'
+  closeBtn.onclick = () => overlay.remove()
+
+  video.addEventListener('ended', () => setTimeout(() => overlay.remove(), 3000))
+
+  container.appendChild(video)
+  container.appendChild(closeBtn)
+  overlay.appendChild(container)
+  document.body.appendChild(overlay)
+  break
     case '/saluto':
       Swal.fire('Ciao!','Un abbraccio virtuale da Guest Community','success')
       break
