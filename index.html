@@ -199,160 +199,186 @@
 
     fetchMeteo();fetchNotizie();updateTime();setInterval(updateTime,1000);fetchEventi()
 
-    const commands=[
-      {cmd:'/dedica',desc:'Una sorpresina per te!'},
-      {cmd:'/saluto',desc:'Un saluto amichevole'},
-      {cmd:'/barzelletta',desc:'Ridiamoci su (gli abbiamo fatti a caso, sappiamo che non fanno ridere)'},
-      {cmd:'/sadface',desc:'Una faccia sad :<'},
-      {cmd:'/oroscopo',desc:'Stelle e destino'},
-      {cmd:'/gif',desc:'Gif a caso :/'},
-      {cmd:'/quiz',desc:'Metti alla prova la mente'},
-      {cmd:'/secret',desc:'Apri e lo scopri'},
-      {cmd:'/aforisma',desc:'Parole ispirate (forse)'},
-      {cmd:'/info',desc:'Scopri il sito'},
-      {cmd:'/chiedi',desc:'Parla con l’AI'},
-      {cmd:'/riflessione',desc:'Pensieri profondi'},
-      {cmd:'/casuale',desc:'P.S ti piacerà'}
-    ]
+const commands=[
+  {cmd:'/dedica',desc:'Una sorpresina per te!'},
+  {cmd:'/saluto',desc:'Un saluto amichevole'},
+  {cmd:'/barzelletta',desc:'Ridiamoci su (gli abbiamo fatti a caso, sappiamo che non fanno ridere)'},
+  {cmd:'/sadface',desc:'Una faccia sad :<'},
+  {cmd:'/oroscopo',desc:'Stelle e destino'},
+  {cmd:'/gif',desc:'Gif a caso :/'},
+  {cmd:'/quiz',desc:'Metti alla prova la mente'},
+  {cmd:'/secret',desc:'Apri e lo scopri'},
+  {cmd:'/aforisma',desc:'Parole ispirate (forse)'},
+  {cmd:'/info',desc:'Scopri il sito'},
+  {cmd:'/chiedi',desc:'Parla con l’AI'},
+  {cmd:'/riflessione',desc:'Pensieri profondi'},
+  {cmd:'/casuale',desc:'P.S ti piacerà'},
+  {cmd:'/ship',desc:'Ship tra due persone'}
+]
 
-    const list=document.getElementById('command-list'),input=document.getElementById('command-input')
-    commands.forEach(c=>{
-      const el=document.createElement('div')
-      el.className='command-item'
-      el.textContent=`${c.cmd} – ${c.desc}`
-      el.onclick=()=>input.value=c.cmd
-      list.appendChild(el)
-    })
+const list=document.getElementById('command-list'),input=document.getElementById('command-input')
+commands.forEach(c=>{
+  const el=document.createElement('div')
+  el.className='command-item'
+  el.textContent=`${c.cmd} – ${c.desc}`
+  el.onclick=()=>input.value=c.cmd
+  list.appendChild(el)
+})
 
-    document.getElementById('command-send').addEventListener('click',()=>eseguiComando(input.value))
-    input.addEventListener('keydown',e=>e.key==='Enter'&&eseguiComando(input.value))
+document.getElementById('command-send').addEventListener('click',()=>eseguiComando(input.value))
+input.addEventListener('keydown',e=>e.key==='Enter'&&eseguiComando(input.value))
 
-    function eseguiComando(c){
-      c=c.trim().toLowerCase()
-      if(!c.startsWith('/')){Swal.fire('Errore','Scegli un comando dalla lista','error');return}
-      switch(c){
-case '/dedica':
-  document.body.innerHTML = ''
-  document.head.innerHTML = `
-    <style>
-      body {
-        margin: 0;
-        overflow: hidden;
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #1a1a1a, #4b0082);
-        font-family: 'Outfit', sans-serif;
-        user-select: none;
-      }
-      #video-container {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 90vw;
-        height: 90vh;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 30px;
-        box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
-        overflow: hidden;
-        backdrop-filter: blur(15px);
-        animation: fadein 2s ease-in-out;
-      }
-      video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 30px;
-        animation: zoomin 10s ease-in-out infinite alternate;
-      }
-      @keyframes fadein {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-      }
-      @keyframes zoomin {
-        from { transform: scale(1); }
-        to { transform: scale(1.05); }
-      }
-    </style>`
-  const container = document.createElement('div')
-  container.id = 'video-container'
-  const video = document.createElement('video')
-  video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4'
-  video.autoplay = true
-  video.loop = false
-  video.muted = false
-  video.playsInline = true
-  video.controls = false
-  video.disablePictureInPicture = true
-  video.oncontextmenu = e => e.preventDefault()
-  video.addEventListener('ended', () => {
-    setTimeout(() => location.reload(), 3000)
-  })
-  container.appendChild(video)
-  document.body.appendChild(container)
-  break
-
-        case '/saluto':
-          Swal.fire('Ciao!','Un abbraccio virtuale da Guest Community','success')
-          break
-        case '/barzelletta':
-          Swal.fire('Barzelletta','Cosa fa un uccello in un bar? Ordina un cucu-tequila!','info')
-          break
-        case '/sadface':
-          const memes=[
-            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
-            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
-            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
-            'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg'
-          ]
-          Swal.fire({title:'Sad Face :<',imageUrl:memes[Math.floor(Math.random()*memes.length)],showCloseButton:true})
-          break
-        case '/oroscopo':
-          Swal.fire('Oroscopo','Oggi la fortuna ti sorride: cogli l’attimo!','info')
-          break
-        case '/gif':
-          const gifs=[
-            'https://media1.tenor.com/m/6IVxqRE1Tc4AAAAC/papa.gif',
-            'https://media1.tenor.com/m/ex_J-MZ6CRIAAAAC/sybau-lazerdim.gif'
-          ]
-          Swal.fire({title:'Gif',imageUrl:gifs[Math.floor(Math.random()*gifs.length)],showCloseButton:true})
-          break
-        case '/quiz':
-          Swal.fire({
-            title:'Quiz veloce',
-            text:'Qual è la capitale dell’Italia?',
-            input:'radio',
-            inputOptions:{Roma:'Roma',Milano:'Milano',Napoli:'Napoli'},
-            inputValidator:v=>v?undefined:'Scegli un’opzione',
-            showCancelButton:true
-          }).then(r=>{if(r.value==='Roma')Swal.fire('Bravo!','Corretto.','success');else Swal.fire('Peccato','Risposta sbagliata.','error')})
-          break
-        case '/secret':
-          Swal.fire('😑😑😑','Cosa pensavi che ci fosse?','info')
-          break
-        case '/aforisma':
-          const afs=['Sii il cambiamento che vuoi vedere.','Ogni attimo è un nuovo inizio.','La felicità è qui e ora.']
-          Swal.fire('Aforisma',afs[Math.floor(Math.random()*afs.length)],'info')
-          break
-        case '/info':
-          Swal.fire('Info','Guest Community by Tutuu666k Team','info')
-          break
-        case '/chiedi':
-          Swal.fire('AI','Attualmente la funzione AI non è ancora disponibile. 😔','info')
-          break
-        case '/riflessione':
-          Swal.fire('Riflessione','Le grandi idee nascono dal silenzio. :>','info')
-          break
-        case '/casuale':
-          const msgs=['La vita è bella! :>','Sorprenditi ogni giorno. ❤️','Un sorriso cambia tutto. 🥺']
-          Swal.fire('Casuale',msgs[Math.floor(Math.random()*msgs.length)],'info')
-          break
-        default:
-          Swal.fire('Errore','Comando non riconosciuto','error')
-      }
+function eseguiComando(c){
+  c=c.trim().toLowerCase()
+  if(!c.startsWith('/')){Swal.fire('Errore','Scegli un comando dalla lista','error');return}
+  switch(c){
+    case '/dedica':
+      document.body.innerHTML = ''
+      document.head.innerHTML = `
+        <style>
+          body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a1a, #4b0082);
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+          }
+          #video-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90vw;
+            height: 90vh;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            animation: fadein 2s ease-in-out;
+          }
+          video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 30px;
+            animation: zoomin 10s ease-in-out infinite alternate;
+          }
+          @keyframes fadein {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+          }
+          @keyframes zoomin {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+          }
+        </style>`
+      const container = document.createElement('div')
+      container.id = 'video-container'
+      const video = document.createElement('video')
+      video.src = 'https://github.com/silentnotes-site/guestcommunity/raw/refs/heads/main/Tutuu666k.mp4'
+      video.autoplay = true
+      video.loop = false
+      video.muted = false
+      video.playsInline = true
+      video.controls = false
+      video.disablePictureInPicture = true
+      video.oncontextmenu = e => e.preventDefault()
+      video.addEventListener('ended', () => {
+        setTimeout(() => location.reload(), 3000)
+      })
+      container.appendChild(video)
+      document.body.appendChild(container)
+      break
+    case '/saluto':
+      Swal.fire('Ciao!','Un abbraccio virtuale da Guest Community','success')
+      break
+    case '/barzelletta':
+      Swal.fire('Barzelletta','Cosa fa un uccello in un bar? Ordina un cucu-tequila!','info')
+      break
+    case '/sadface':
+      const memes=[
+        'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+        'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+        'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg',
+        'https://wallpapers.com/images/featured/sad-face-pictures-qm02f8bfvzhxyf1y.jpg'
+      ]
+      Swal.fire({title:'Sad Face :<',imageUrl:memes[Math.floor(Math.random()*memes.length)],showCloseButton:true})
+      break
+    case '/oroscopo':
+      Swal.fire('Oroscopo','Oggi la fortuna ti sorride: cogli l’attimo!','info')
+      break
+    case '/gif':
+      const gifs=[
+        'https://media1.tenor.com/m/6IVxqRE1Tc4AAAAC/papa.gif',
+        'https://media1.tenor.com/m/ex_J-MZ6CRIAAAAC/sybau-lazerdim.gif'
+      ]
+      Swal.fire({title:'Gif',imageUrl:gifs[Math.floor(Math.random()*gifs.length)],showCloseButton:true})
+      break
+    case '/quiz':
+      Swal.fire({
+        title:'Quiz veloce',
+        text:'Qual è la capitale dell’Italia?',
+        input:'radio',
+        inputOptions:{Roma:'Roma',Milano:'Milano',Napoli:'Napoli'},
+        inputValidator:v=>v?undefined:'Scegli un’opzione',
+        showCancelButton:true
+      }).then(r=>{if(r.value==='Roma')Swal.fire('Bravo!','Corretto.','success');else Swal.fire('Peccato','Risposta sbagliata.','error')})
+      break
+    case '/secret':
+      Swal.fire('😑😑😑','Cosa pensavi che ci fosse?','info')
+      break
+    case '/aforisma':
+      const afs=['Sii il cambiamento che vuoi vedere.','Ogni attimo è un nuovo inizio.','La felicità è qui e ora.']
+      Swal.fire('Aforisma',afs[Math.floor(Math.random()*afs.length)],'info')
+      break
+    case '/info':
+      Swal.fire('Info','Guest Community by Tutuu666k Team','info')
+      break
+    case '/chiedi':
+      Swal.fire('AI','Attualmente la funzione AI non è ancora disponibile. 😔','info')
+      break
+    case '/riflessione':
+      Swal.fire('Riflessione','Le grandi idee nascono dal silenzio. :>','info')
+      break
+    case '/casuale':
+      const msgs=['La vita è bella! :>','Sorprenditi ogni giorno. ❤️','Un sorriso cambia tutto. 🥺']
+      Swal.fire('Casuale',msgs[Math.floor(Math.random()*msgs.length)],'info')
+      break
+    case '/ship':
+      Swal.fire({
+        title: 'Ship ❤️',
+        html:
+          '<input id="ship-name1" class="swal2-input" placeholder="Il tuo nome">' +
+          '<input id="ship-name2" class="swal2-input" placeholder="Nome dell\'amante">',
+        focusConfirm: false,
+        showCancelButton: true,
+        preConfirm: () => {
+          const name1 = document.getElementById('ship-name1').value.trim();
+          const name2 = document.getElementById('ship-name2').value.trim();
+          if (!name1 || !name2) {
+            Swal.showValidationMessage('Inserisci entrambi i nomi');
+          }
+          return { name1, name2 };
+        }
+      }).then(result => {
+        if (result.isConfirmed) {
+          const { name1, name2 } = result.value;
+          const percent = Math.floor(Math.random() * 101);
+          const total = 10;
+          const filled = Math.round((percent / 100) * total);
+          const hearts = '❤️'.repeat(filled) + '🤍'.repeat(total - filled);
+          Swal.fire(`${name1} + ${name2}`, `${hearts}<br><strong>${percent}%</strong> di affinità!`, 'success');
+        }
+      });
+      break
+    default:
+      Swal.fire('Errore','Comando non riconosciuto','error')
     }
   }
 })()
